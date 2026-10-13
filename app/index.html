@@ -1,0 +1,433 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="description" content="Compare AI models by price per token, context size, parameters, and coding, science, and reliability scores. Updated weekly.">
+<meta name="theme-color" content="#0f6b5c">
+<link rel="manifest" href="/manifest.webmanifest">
+<link rel="icon" type="image/png" href="/favicon.png">
+<link rel="apple-touch-icon" href="/apple-touch-icon.png">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-title" content="Model Matcher">
+<meta name="apple-mobile-web-app-status-bar-style" content="default">
+<style>:root{padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}body{margin:0;font-size:14px}img{max-width:100%}[hidden]{display:none!important}</style>
+<title>AI Model Matcher</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500&family=IBM+Plex+Sans:wght@400;500;600&family=Fraunces:opsz,wght@9..144,600&display=swap">
+<style>
+/* Layout: control bar of goal chips + filters on top, one wide sortable ledger below, scrolls inside its own box */
+:root{
+  --bg:#f5f6f4;--panel:#ffffff;--ink:#1d2321;--muted:#5c6763;--line:#dde2df;
+  --accent:#0f6b5c;--accent-soft:#e1efeb;--pick:#a15c00;--pick-soft:#fbefdc;
+  --bar:#0f6b5c;--bar-bg:#e7ece9;
+  --f-display:"Fraunces",Georgia,serif;--f-body:"IBM Plex Sans",system-ui,-apple-system,"Segoe UI",sans-serif;--f-mono:"IBM Plex Mono",ui-monospace,Menlo,Consolas,monospace;
+}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){
+  --bg:#121614;--panel:#1a201e;--ink:#e6ebe8;--muted:#9aa6a1;--line:#2c3532;
+  --accent:#5cc9b3;--accent-soft:#1d3530;--pick:#f0b25c;--pick-soft:#3a2c17;--bar:#5cc9b3;--bar-bg:#26302d;color-scheme:dark}}
+:root[data-theme="dark"]{
+  --bg:#121614;--panel:#1a201e;--ink:#e6ebe8;--muted:#9aa6a1;--line:#2c3532;
+  --accent:#5cc9b3;--accent-soft:#1d3530;--pick:#f0b25c;--pick-soft:#3a2c17;--bar:#5cc9b3;--bar-bg:#26302d;color-scheme:dark}
+*{box-sizing:border-box}
+body{background:var(--bg);color:var(--ink);font-family:var(--f-body);font-size:15px;line-height:1.45}
+.wrap{max-width:1400px;margin:0 auto;padding-inline:16px;padding-block:20px 40px;display:flex;flex-direction:column;gap:18px}
+header{display:flex;flex-wrap:wrap;align-items:flex-end;justify-content:space-between;gap:12px}
+h1{font-family:var(--f-display);font-weight:600;font-size:clamp(26px,4vw,36px);margin:0;letter-spacing:-.01em;text-wrap:balance}
+.sub{color:var(--muted);margin:4px 0 0;max-width:68ch}
+.stamp{font-family:var(--f-mono);font-size:12px;color:var(--muted);text-align:right}
+.stamp b{color:var(--ink);font-weight:500}
+section.panel{background:var(--panel);border:1px solid var(--line);border-radius:10px;padding:16px;display:flex;flex-direction:column;gap:14px}
+.label{font-size:11px;text-transform:uppercase;letter-spacing:.08em;color:var(--muted);font-weight:600}
+.goals{display:flex;flex-wrap:wrap;gap:8px}
+.goal{font:inherit;font-size:14px;border:1px solid var(--line);background:var(--bg);color:var(--ink);border-radius:999px;padding:7px 14px;cursor:pointer}
+.goal:hover{border-color:var(--accent)}
+.goal[aria-pressed="true"]{background:var(--accent);border-color:var(--accent);color:var(--panel);font-weight:600}
+.goal:focus-visible,.f input:focus-visible,.f select:focus-visible,th button:focus-visible,.reset:focus-visible{outline:2px solid var(--accent);outline-offset:2px}
+.goalnote{color:var(--muted);font-size:13.5px;margin:0}
+.filters{display:grid;grid-template-columns:repeat(auto-fill,minmax(170px,1fr));gap:12px}
+.f{display:flex;flex-direction:column;gap:4px;min-width:0}
+.f label{font-size:12.5px;color:var(--muted);font-weight:500}
+.f input,.f select{font:inherit;font-size:14px;padding:7px 9px;border:1px solid var(--line);border-radius:6px;background:var(--bg);color:var(--ink);width:100%}
+.f.check{flex-direction:row;align-items:center;gap:8px;padding-top:20px}
+.f.check label{color:var(--ink);font-size:14px}
+.f.check input{width:auto;accent-color:var(--accent)}
+.row2{display:flex;flex-wrap:wrap;justify-content:space-between;align-items:center;gap:10px}
+.count{font-size:14px}.count b{font-family:var(--f-mono)}
+.reset{font:inherit;font-size:13px;background:none;border:1px solid var(--line);color:var(--ink);border-radius:6px;padding:6px 12px;cursor:pointer}
+.picks{display:grid;grid-template-columns:repeat(auto-fit,minmax(240px,1fr));gap:12px}
+.pick{border:1px solid var(--line);border-radius:10px;padding:12px 14px;background:var(--panel);display:flex;flex-direction:column;gap:4px;min-width:0}
+.pick.top{border-color:var(--pick);background:var(--pick-soft)}
+.pick .k{font-size:11px;text-transform:uppercase;letter-spacing:.08em;color:var(--muted);font-weight:600}
+.pick.top .k{color:var(--pick)}
+.pick .n{font-weight:600;font-size:16px;overflow-wrap:anywhere}
+.pick .d{font-family:var(--f-mono);font-size:12.5px;color:var(--muted)}
+.wrap>*{min-width:0}
+.tablebox{overflow:auto;max-height:75vh;max-width:100%;-webkit-overflow-scrolling:touch;border:1px solid var(--line);border-radius:10px;background:var(--panel)}
+table{border-collapse:separate;border-spacing:0;width:max-content;min-width:100%;font-size:13.5px}
+th.sticky,td.sticky{position:sticky;left:0;background:var(--panel);min-width:190px;max-width:240px;box-shadow:1px 0 0 var(--line)}
+thead th.sticky{z-index:3}
+tbody td.sticky{z-index:1}
+thead th{min-width:96px;max-width:150px;white-space:normal}
+.scrollbar{display:flex;flex-wrap:wrap;align-items:center;justify-content:space-between;gap:8px;font-size:13px;color:var(--muted)}
+.scrollbar .btns{display:flex;gap:6px}
+.scrollbar button{font:inherit;font-size:13px;border:1px solid var(--line);background:var(--panel);color:var(--ink);border-radius:6px;padding:5px 10px;cursor:pointer}
+.scrollbar button:focus-visible,.gloss summary:focus-visible{outline:2px solid var(--accent);outline-offset:2px}
+.gloss{background:var(--panel);border:1px solid var(--line);border-radius:10px;padding:0 16px}
+.gloss summary{cursor:pointer;padding:14px 0;font-weight:600;font-size:15px}
+.gloss dl{display:grid;grid-template-columns:repeat(auto-fill,minmax(280px,1fr));gap:14px 24px;margin:0 0 16px}
+.gloss dl div{min-width:0}
+.gloss dt{font-weight:600;margin-bottom:2px}
+.gloss dd{margin:0;color:var(--muted);font-size:14px;max-width:62ch}
+.gloss h3{font-size:12px;text-transform:uppercase;letter-spacing:.08em;color:var(--accent);margin:4px 0 10px}
+.viewbar{display:flex;flex-wrap:wrap;align-items:center;gap:10px}
+.viewbar .goal{font-size:13px;padding:5px 12px}
+td.params{white-space:nowrap}
+td.params small{display:block;color:var(--muted);font-size:11px}
+thead th{position:sticky;top:0;background:var(--panel);z-index:1;border-bottom:1px solid var(--line);text-align:left;padding:0;white-space:nowrap;vertical-align:bottom}
+th button{font:inherit;font-size:12px;font-weight:600;color:var(--muted);background:none;border:0;padding:10px 10px 8px;cursor:pointer;text-align:inherit;width:100%;line-height:1.25;white-space:normal}
+th button small{display:block;font-weight:400;font-size:11px}
+th button small.src{font-style:italic;margin-top:1px}
+th.num,td.num{text-align:right}
+th[aria-sort] button{color:var(--accent)}
+th[aria-sort="ascending"] button::after{content:" ▲";font-size:10px}
+th[aria-sort="descending"] button::after{content:" ▼";font-size:10px}
+tbody td{padding:8px 10px;border-bottom:1px solid var(--line);vertical-align:top}
+tbody tr:hover td{background:var(--accent-soft)}
+td.num{font-family:var(--f-mono);font-variant-numeric:tabular-nums;white-space:nowrap}
+td.model .mn{font-weight:600}
+td.model .id{font-family:var(--f-mono);font-size:11.5px;color:var(--muted);overflow-wrap:anywhere}
+td.prov{white-space:nowrap}
+.tag{display:inline-block;font-size:10.5px;font-weight:600;letter-spacing:.04em;text-transform:uppercase;border-radius:4px;padding:1px 6px;margin-top:3px;margin-right:4px}
+.tag.free{background:var(--accent-soft);color:var(--accent)}
+.tag.direct{background:var(--bar-bg);color:var(--muted)}
+.tag.best{background:var(--pick-soft);color:var(--pick)}
+.na{color:var(--muted)}
+.meter{display:flex;align-items:center;justify-content:flex-end;gap:6px}
+.meter i{display:block;width:44px;height:6px;border-radius:3px;background:var(--bar-bg);position:relative;overflow:hidden}
+.meter i b{position:absolute;inset:0 auto 0 0;background:var(--bar);border-radius:3px}
+.notes{color:var(--muted);font-size:13px;display:flex;flex-direction:column;gap:6px;max-width:90ch}
+.notes p{margin:0}
+.notes a{color:var(--accent)}
+.empty{padding:30px;text-align:center;color:var(--muted)}
+td.fit{white-space:nowrap}
+td.notes{min-width:260px;max-width:340px;white-space:normal;font-size:12.5px;color:var(--muted)}
+td.notes b{color:var(--ink);font-weight:600}
+.tier{display:inline-block;font-size:10.5px;font-weight:600;letter-spacing:.03em;text-transform:uppercase;border-radius:4px;padding:1px 6px;margin-right:6px;font-family:var(--f-body)}
+.tier.t1{background:var(--pick-soft);color:var(--pick)}
+.tier.t2{background:var(--accent-soft);color:var(--accent)}
+.tier.t4,.tier.t3{background:var(--bar-bg);color:var(--muted)}
+td.model .pv{display:none;font-size:11.5px;color:var(--muted)}
+@media (max-width:600px){.stamp{text-align:left}.f.check{padding-top:0}
+  .provcol{display:none}
+  td.model .pv{display:block}
+  td.model .id{display:none}
+  th.sticky,td.sticky{min-width:0;width:112px;max-width:112px}
+  td.model .mn{font-size:12.5px;line-height:1.3;overflow-wrap:anywhere}
+  .tag{font-size:9.5px;padding:0 4px}
+  thead th{min-width:70px;max-width:92px}
+  th button{padding:8px 6px 6px;font-size:11px}
+  th button small{font-size:10px}
+  tbody td{padding:7px 6px}
+  table{font-size:12.5px}
+  .meter i{display:none}
+  td.params small{font-size:10px}
+}
+@media (prefers-reduced-motion:reduce){*{transition:none!important}}
+</style>
+
+</head>
+<body>
+<div class="wrap">
+  <header>
+    <div>
+      <h1>AI Model Matcher</h1>
+      <p class="sub">Every model you can pay for by the token, with its price per 1 million tokens, context size, and test scores. Pick a goal or set filters to find the cheapest model that does the job.</p>
+    </div>
+    <div class="stamp" id="stamp">Loading data…</div>
+  </header>
+
+  <section class="panel" aria-label="Goal">
+    <span class="label">What do you need?</span>
+    <div class="goals" id="goals"></div>
+    <p class="goalnote" id="goalnote"></p>
+  </section>
+
+  <section class="panel" aria-label="Project type">
+    <span class="label">What type of project are you working on?</span>
+    <div class="goals" id="projs"></div>
+    <p class="goalnote" id="projnote"></p>
+  </section>
+
+  <div class="picks" id="picks"></div>
+
+  <details class="gloss" id="gloss">
+    <summary>Glossary</summary>
+    <h3>Size and memory</h3>
+    <dl>
+      <div><dt>Parameters</dt><dd>The size of the model's learned "brain," in billions (B) or trillions (T) of settings it picked up in training. Bigger usually knows more but costs more and runs slower. "Active" means how much of it works on each word; models built this way run cheaper for their size. OpenAI, Anthropic, Google, and xAI don't publish sizes, so those show Small, Medium, or Large.</dd></div>
+      <div><dt>Context</dt><dd>How much the model can read and keep in mind at once: your instructions, files, and the conversation so far. 1M (1 million) tokens is about 750,000 words, or a few long books. Size isn't the same as using it well; see "Long-context accuracy."</dd></div>
+      <div><dt>Token</dt><dd>The unit models read and write in, about ¾ of a word. All prices here are per 1 million tokens.</dd></div>
+    </dl>
+    <h3>Cost</h3>
+    <dl>
+      <div><dt>Input</dt><dd>What you pay for everything you send the model: your question, instructions, and any files.</dd></div>
+      <div><dt>Cached input</dt><dd>A cheaper input rate for text the model saw recently, such as the same long instructions sent every time. Agents that repeat a long setup save the most here.</dd></div>
+      <div><dt>Output</dt><dd>What you pay for everything the model writes back, including its hidden "thinking" on reasoning models. Output usually costs 4 to 8 times more than input.</dd></div>
+      <div><dt>Typical cost</dt><dd>One number to compare models: 3 parts input to 1 part output, a common mix for chat and agent work.</dd></div>
+      <div><dt>Coding per $</dt><dd>Coding score divided by typical cost. Higher means more coding skill for each dollar.</dd></div>
+      <div><dt>Subscription-only tools</dt><dd>Image and video apps you pay for by the month instead of by the token, such as Midjourney, Runway, and Descript. Turn on <b>Show subscription-only tools</b> in the filters to list them. They have no test scores here, and their prices and notes come from each maker's pricing page as of the date shown at the top.</dd></div>
+      <div><dt>Where to buy</dt><dd>"OpenRouter" means you can use it through one OpenRouter account. "Maker only" means you buy it from the company that made it.</dd></div>
+    </dl>
+    <h3>Scores (0 to 100, higher is better)</h3>
+    <dl>
+      <div><dt>Coding</dt><dd>Average of two tests: Terminal-Bench, where the model works on its own in a computer terminal to finish real coding jobs, and SciCode, which asks it to write code for science problems.</dd></div>
+      <div><dt>GPQA</dt><dd>A graduate-level science quiz in biology, physics, and chemistry, written so answers can't be looked up. PhD experts score about 65.</dd></div>
+      <div><dt>Smarts</dt><dd>The Artificial Analysis Intelligence Index: one score that blends ten hard tests in math, science, coding, and reasoning. It replaces MMLU, which testing sites retired because top models all score near the top.</dd></div>
+    </dl>
+    <h3>Reliability (0 to 100; higher is better, except hallucination rate)</h3>
+    <dl>
+      <div><dt>Reliability</dt><dd>How safely you can hand the model a long job and trust the result. It blends three things: a low hallucination rate, long-context accuracy, and coding. A model needs all three to get a reliability score.</dd></div>
+      <div><dt>Fact accuracy</dt><dd>The share of thousands of hard fact questions the model answers correctly (AA-Omniscience test). Higher is better. Read it with hallucination rate: accuracy shows how often it knows; hallucination rate shows what it does when it doesn't.</dd></div>
+      <div><dt>Hallucination rate</dt><dd>When the model doesn't know an answer, how often it makes one up instead of saying "I don't know" (AA-Omniscience test, thousands of hard fact questions). Correct answers don't count. Lower is better: 90% means that when it's stuck, it bluffs 9 times out of 10. Most models score high here; under 50% is good.</dd></div>
+      <div><dt>Long-context accuracy</dt><dd>How well it finds and reasons over facts buried in long documents of 10,000 to 100,000 tokens, such as a stack of reports or a big spreadsheet (AA-LCR test). Higher is better.</dd></div>
+      <div><dt>Tool use</dt><dd>How well it finishes multi-step customer-service jobs that need tools, while a simulated customer talks back (τ²-Bench test). Newer models often have no score here because the testing site stopped running it.</dd></div>
+      <div><dt>Follows rules</dt><dd>How well it sticks to exact instructions, such as "answer in 3 bullets" or "don't use the word very" (IFBench test). Newer models often have no score here for the same reason.</dd></div>
+      <div><dt>A dash (–)</dt><dd>No independent test result yet. It doesn't mean the model scored zero.</dd></div>
+    </dl>
+  </details>
+
+  <section class="panel" aria-label="Filters">
+    <span class="label">Filters</span>
+    <div class="filters">
+      <div class="f"><label for="q">Search model or provider</label><input id="q" type="search" placeholder="e.g. claude, qwen, coder"></div>
+      <div class="f"><label for="prov">Provider</label><select id="prov"><option value="">All providers</option></select></div>
+      <div class="f"><label for="minctx">Minimum context</label><select id="minctx">
+        <option value="0">Any size</option><option value="32000">32K+ tokens</option><option value="128000">128K+ tokens</option><option value="200000">200K+ tokens</option><option value="400000">400K+ tokens</option><option value="1000000">1M+ tokens</option><option value="2000000">2M+ tokens</option></select></div>
+      <div class="f"><label for="maxin">Max input price ($ per 1M)</label><input id="maxin" type="number" min="0" step="0.05" placeholder="No limit"></div>
+      <div class="f"><label for="maxout">Max output price ($ per 1M)</label><input id="maxout" type="number" min="0" step="0.1" placeholder="No limit"></div>
+      <div class="f"><label for="mincode">Minimum coding score</label><input id="mincode" type="number" min="0" max="100" step="1" placeholder="0 to 100"></div>
+      <div class="f"><label for="mingpqa">Minimum GPQA score</label><input id="mingpqa" type="number" min="0" max="100" step="1" placeholder="0 to 100"></div>
+      <div class="f"><label for="minrel">Minimum reliability</label><input id="minrel" type="number" min="0" max="100" step="1" placeholder="0 to 100"></div>
+      <div class="f"><label for="where">Where to buy</label><select id="where"><option value="">Anywhere</option><option value="OpenRouter">OpenRouter (one account)</option><option value="Direct from maker">Direct from the maker only</option></select></div>
+      <div class="f check"><input id="scored" type="checkbox"><label for="scored">Only models with test scores</label></div>
+      <div class="f check"><input id="textonly" type="checkbox"><label for="textonly">Hide image and audio models</label></div>
+      <div class="f check"><input id="freeonly" type="checkbox"><label for="freeonly">Free models only</label></div>
+      <div class="f check"><input id="subs" type="checkbox"><label for="subs">Show subscription-only tools</label></div>
+    </div>
+    <div class="row2"><span class="count" id="count"></span><button class="reset" id="reset" type="button">Clear filters</button></div>
+  </section>
+
+
+  <div class="scrollbar"><span>Wide table: scroll sideways, or use the buttons, to see every column. The model name stays pinned on the left.</span><span class="btns"><button type="button" id="sl">◀ Scroll left</button><button type="button" id="sr">Scroll right ▶</button></span></div>
+
+  <div class="tablebox" id="tbox"><table>
+    <thead><tr id="head"></tr></thead>
+    <tbody id="body"><tr><td class="empty" colspan="12">Loading models…</td></tr></tbody>
+  </table></div>
+
+  <div class="notes">
+    <p><b>Sources.</b> Prices and context: <a href="https://openrouter.ai/models" target="_blank" rel="noopener">OpenRouter model list</a>. Scores, and prices for models sold only by their maker: <a href="https://artificialanalysis.ai/leaderboards/models" target="_blank" rel="noopener">Artificial Analysis leaderboard</a>. A weekly update refreshes both.</p>
+  </div>
+</div>
+
+<script>
+(function(){
+const NA='<span class="na">&ndash;</span>';
+const COLS=[
+  {k:'prov',t:'Provider',v:'psra',cls:'provcol',cell:r=>'<td class="prov provcol">'+esc(r.prov)+'</td>'},
+  {k:'model',t:'Model',v:'psra',sticky:1,cell:(r,i)=>'<td class="model sticky"><div class="mn">'+esc(r.model)+'</div><div class="pv">'+esc(r.prov)+'</div><div class="id">'+esc(r.id)+'</div>'+(i===0?'<span class="tag best">Top match</span>':'')+(r.free||r.blend===0?'<span class="tag free">Free</span>':'')+(r.sub?'<span class="tag direct">Subscription</span>':'')+'</td>'},
+  {k:'pb',t:'Parameters',src:'Published size',s:'billions · bigger knows more, costs more',num:1,v:'psra',cell:r=>'<td class="num params">'+(r.pb?fmtB(r.pb)+(r.pa?'<small>'+fmtB(r.pa)+' active</small>':''):(r.size?'<span class="na">'+r.size[0].toUpperCase()+r.size.slice(1)+'</span><small>not published</small>':NA))+'</td>'},
+  {k:'ctx',t:'Context',src:'Max tokens it reads at once',s:'higher is better',num:1,v:'psra',cell:r=>'<td class="num">'+fmtCtx(r.ctx)+'</td>'},
+  {k:'pin',t:'Input',src:'$ per 1M tokens sent',s:'lower is better',num:1,v:'pa',cell:r=>'<td class="num">'+fmt$(r.pin)+'</td>'},
+  {k:'pcache',t:'Cached input',src:'$ per 1M repeated tokens',s:'lower is better',num:1,v:'pa',cell:r=>'<td class="num">'+fmt$(r.pcache)+'</td>'},
+  {k:'pout',t:'Output',src:'$ per 1M tokens written',s:'lower is better',num:1,v:'pa',cell:r=>'<td class="num">'+fmt$(r.pout)+'</td>'},
+  {k:'blend',t:'Typical cost',src:'3 parts input : 1 part output, $ per 1M',s:'lower is better',num:1,v:'psra',cell:r=>'<td class="num">'+fmt$(r.blend)+'</td>'},
+  {k:'rel',t:'Reliability',src:'Avg of AA-Omniscience, AA-LCR, Coding',s:'0 to 100 · higher is better',num:1,v:'ra',cell:r=>'<td class="num">'+meter(r.rel,80)+'</td>'},
+  {k:'acc',t:'Fact accuracy',src:'AA-Omniscience',s:'0 to 100 · higher is better',num:1,v:'ra',d:'The share of hard fact questions the model answers correctly. Higher is better.',cell:r=>'<td class="num">'+meter(r.acc,100)+'</td>'},
+  {k:'hrate',t:'Hallucination rate',src:'AA-Omniscience',s:'% · lower is better',num:1,v:'ra',d:'When the model does not know the answer, how often it guesses wrong instead of saying it does not know. Lower is better.',cell:r=>'<td class="num">'+meter(r.hrate,100)+'</td>'},
+  {k:'lcr',t:'Long-context accuracy',src:'AA-LCR',s:'0 to 100 · higher is better',d:'How well it finds and reasons over facts buried in long documents.',num:1,v:'ra',cell:r=>'<td class="num">'+meter(r.lcr,100)+'</td>'},
+  {k:'tool',t:'Tool use',src:'τ²-Bench',s:'0 to 100 · higher is better',num:1,v:'ra',cell:r=>'<td class="num">'+meter(r.tool,100)+'</td>'},
+  {k:'instr',t:'Follows rules',src:'IFBench',s:'0 to 100 · higher is better',num:1,v:'ra',cell:r=>'<td class="num">'+meter(r.instr,100)+'</td>'},
+  {k:'code',t:'Coding',src:'Terminal-Bench + SciCode avg',s:'0 to 100 · higher is better',num:1,v:'sra',cell:r=>'<td class="num">'+meter(r.code,80)+'</td>'},
+  {k:'gpqa',t:'GPQA',src:'GPQA Diamond',s:'0 to 100 · higher is better',num:1,v:'sa',cell:r=>'<td class="num">'+meter(r.gpqa,100)+'</td>'},
+  {k:'ii',t:'Smarts',src:'AA Intelligence Index',s:'0 to 100 · higher is better',num:1,v:'sa',cell:r=>'<td class="num">'+meter(r.ii,60)+'</td>'},
+  {k:'codeval',t:'Coding per $',src:'Coding ÷ Typical cost',s:'higher is better',num:1,v:'psa',cell:r=>'<td class="num">'+(r.codeval==null?NA:isFinite(r.codeval)?Math.round(r.codeval).toLocaleString():'free')+'</td>'},
+  {k:'where',t:'Where to buy',v:'psra',cell:r=>'<td>'+(r.sub?'<a href="'+esc(r.url)+'" target="_blank" rel="noopener">Monthly plan</a>':r.where==='OpenRouter'?'OpenRouter':'<span class="tag direct">Maker only</span>')+'</td>'}
+];
+const PLANCOL={k:'plan',t:'Monthly plan',num:1,v:'psra',src:'Cheapest paid plan, subscription tools',s:'lower is better',cell:r=>'<td class="num">'+(r.sub?(r.plan!=null?'$'+r.plan.toFixed(2)+'/mo':NA):NA)+'</td>'};
+const NOTESCOL={k:'notes',t:'About this tool',v:'psra',src:'Subscription tools',s:'',cell:r=>'<td class="notes">'+(r.sub?'<b>'+esc(r.kind)+'</b> · free plan: '+(r.freePlan?'yes':'no')+' · developer API: '+(r.api?'yes':'no')+'<br>'+esc(r.note):'')+'</td>'};
+const FITCOL={k:'fit',t:'Project fit',num:1,v:'psra',cell:r=>{const P=proj();if(r.sub)return '<td class="num fit"><span class="tier t3">Subscription</span>'+(r.plan!=null?'$'+r.plan.toFixed(2)+'/mo':'')+'</td>';const tl=['','Top tier','Strong','Fair'][r._tier]||'';
+  const sc=P&&P.id==='image'?(r.pimg!=null?fmt$(r.pimg)+' per 1M':NA):(r._score==null?NA:r._score.toFixed(1));
+  return '<td class="num fit"><span class="tier t'+r._tier+'">'+tl+'</span>'+sc+'</td>'}};
+function proj(){return PROJECTS.find(p=>p.id===state.proj)}
+const VIEWS=[{id:'p',t:'Cost'},{id:'s',t:'Scores'},{id:'r',t:'Reliability'},{id:'a',t:'Everything'}];
+const GOALS=[
+  {id:'value',t:'Best value overall',note:'Ranks models by smarts per dollar of typical cost. Only models with test scores show.',apply:s=>{s.scored=true;s.view='s';s.sort=['smartval','desc']}},
+  {id:'reliable',t:'Most reliable for long tasks',note:'Ranks models by reliability: a low hallucination rate, long-context accuracy, and coding through multi-step work. Use this to pick models for agents that run on their own.',apply:s=>{s.scored=true;s.view='r';s.sort=['rel','desc']}},
+  {id:'code',t:'Cheapest good coder',note:'Coding score of 40 or more, sorted cheapest first. Raise or lower the minimum coding score to taste.',apply:s=>{s.mincode=40;s.scored=true;s.view='s';s.sort=['blend','asc']}},
+  {id:'codeval',t:'Most coding per dollar',note:'Ranks models by coding score divided by typical cost.',apply:s=>{s.scored=true;s.view='s';s.sort=['codeval','desc']}},
+  {id:'ctx',t:'Cheapest with huge context',note:'1 million tokens of context or more, sorted cheapest first. Good for reading long files, sheets, or whole folders at once.',apply:s=>{s.minctx=1000000;s.view='p';s.sort=['blend','asc']}},
+  {id:'smart',t:'Smartest, any price',note:'Highest Intelligence Index first.',apply:s=>{s.scored=true;s.view='s';s.sort=['ii','desc']}},
+  {id:'cheap',t:'Cheapest of all',note:'Lowest typical cost first, including free models. Free models often have tight rate limits.',apply:s=>{s.view='p';s.sort=['blend','asc']}},
+  {id:'all',t:'Show everything',note:'Every model, newest benchmark leaders first.',apply:s=>{s.view='a';s.sort=['ii','desc']}}
+];
+const avg=(a,min)=>{const v=a.filter(x=>x!=null);return v.length>=min?v.reduce((s,x)=>s+x,0)/v.length:null};
+const has=(r,k,m)=>(r[k]||[]).includes(m);
+// Each project: score = what it is good at for this job; ranking = top tier first, then cheapest.
+const PROJECTS=[
+  {id:'webcode',t:'Website coding',src:'Coding (Terminal-Bench + SciCode)',note:'Ranked by coding score, then cheapest first within each tier. Use for building pages, plugins, scripts, and fixing site bugs.',score:r=>r.code},
+  {id:'webdesign',t:'Website design',src:'Coding + reading images (MMMU-Pro)',note:'Needs a model that can see screenshots and mockups and write the code. Ranked by the average of coding and image understanding, then cheapest first.',need:r=>has(r,'inm','image'),score:r=>avg([r.code,r.vis],2)},
+  {id:'basic',t:'Quick, simple questions',src:'Smarts (AA Intelligence Index)',note:'Everyday questions don\'t need the smartest model. Any model with a smarts score of 25 or more counts as top tier, so the cheapest capable models rise to the top.',score:r=>r.ii,tierScore:r=>r.ii==null?null:Math.min(r.ii,25)},
+  {id:'complex',t:'Deep thinking and strategy',src:'Smarts (AA Intelligence Index)',note:'For hard reasoning, planning, and strategy. Ranked by smarts, then cheapest first within each tier.',score:r=>r.ii},
+  {id:'marketing',t:'Marketing and writing',src:'GDPval (real work tasks from 44 jobs)',note:'No test scores ad copy directly. GDPval grades finished real-world work, such as plans, emails, and presentations, across 44 jobs, so it is the closest measure. Ranked by that score, then cheapest first.',score:r=>r.gdp},
+  {id:'finance',t:'Finance and bookkeeping',src:'Fact accuracy + low hallucination + GDPval + banking tasks',note:'Money work needs right answers and no made-up numbers. Ranked by the average of fact accuracy, how rarely it bluffs, real-work quality, and banking-task scores (at least 3 of the 4), then cheapest first.',score:r=>avg([r.acc,r.honest,r.gdp,r.bank],3)},
+  {id:'replies',t:'Customer replies',src:'Follows rules + low hallucination + tool use',note:'For Etsy and email replies: follows your rules, doesn\'t invent facts, and handles back-and-forth. Ranked by the average of those scores (at least 2), then cheapest first.',score:r=>avg([r.instr,r.honest,r.tool,r.bank],2)},
+  {id:'sheets',t:'Spreadsheets and data',src:'Data analysis (AA-AnalystAgent) + long-context + coding',note:'For reports, trackers, and number crunching. Ranked by the average of data-analysis, long-context, and coding scores (at least 2), then cheapest first.',score:r=>avg([r.analyst,r.lcr,r.code],2)},
+  {id:'agents',t:'Agents and automations',src:'Coding + tool use + low hallucination + long-context',note:'For scheduled tasks and n8n-style automations that run on their own. Ranked by the average of those four scores (at least 3), then cheapest first.',score:r=>avg([r.code,r.tool,r.honest,r.lcr],3)},
+  {id:'docs',t:'Long documents and PDFs',src:'Long-context accuracy (AA-LCR)',note:'For reading contracts, statements, and long reports. Ranked by long-context accuracy, then cheapest first.',score:r=>r.lcr},
+  {id:'image',t:'Image generation',src:'Image output price',note:'No independent quality score for image models is in this data yet, so these are ranked by image price only, cheapest first. Price is per 1 million image tokens; one image is usually about 1,000 to 1,300 tokens.',need:r=>has(r,'outm','image'),score:()=>0,price:r=>r.pimg},
+  {id:'video',t:'Video work',src:'Smarts, models that can watch video',note:'These models can watch video to plan edits, write scripts, and find clips. None of them edit video files; video editing tools charge per minute, not per token, so they aren\'t in this list. Ranked by smarts, then cheapest first.',need:r=>has(r,'inm','video'),score:r=>r.ii}
+];
+const $=id=>document.getElementById(id);
+let rows=[],state=fresh(),goal='value';
+function fresh(){return {q:'',prov:'',minctx:0,maxin:'',maxout:'',mincode:'',mingpqa:'',minrel:'',where:'',scored:false,textonly:true,freeonly:false,view:'s',proj:'',subs:false,sort:['ii','desc']}}
+function fmtB(n){return n>=1000?(n/1000).toFixed(n%1000?1:0)+'T':(n%1?n.toFixed(1):n)+'B'}
+function cols(){const c=COLS.slice();if(state.subs){const w=c.findIndex(x=>x.k==='where');c.splice(w,0,PLANCOL,NOTESCOL)}if(!proj())return c;const P=proj();const f=Object.assign({},FITCOL,{src:P.src,s:P.id==='image'?'lower is better':'top tier first, then cheapest'});const i=c.findIndex(x=>x.k==='model');c.splice(i+1,0,f);return c}
+function save(){try{localStorage.setItem('mpf',JSON.stringify({state,goal}))}catch(e){}}
+function load(){try{const v=JSON.parse(localStorage.getItem('mpf')||'null');if(v&&v.state){state=Object.assign(fresh(),v.state);if(!'psra'.includes(state.view)||state.view.length!==1)state.view='s';goal=v.goal||''}}catch(e){}}
+
+function fmtCtx(n){if(!n)return '–';if(n>=1e6)return (n/1e6).toFixed(n%1e6?2:0).replace(/\.?0+$/,'')+'M';return Math.round(n/1000)+'K'}
+function fmt$(v){if(v==null)return '<span class="na">–</span>';if(v===0)return 'free';if(v<0.01)return '$'+v.toFixed(4);if(v<1)return '$'+v.toFixed(3);return '$'+v.toFixed(2)}
+function meter(v,max){if(v==null)return '<span class="na">–</span>';const w=Math.max(0,Math.min(100,v/max*100));return '<span class="meter">'+v.toFixed(1)+'<i><b style="width:'+w+'%"></b></i></span>'}
+function typ(r){return r.blend===0?'free':r.blend==null?'price not listed':fmt$(r.blend)+' typical'}
+function esc(s){return String(s==null?'':s).replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]))}
+
+function prep(d,sd){
+  rows=d.rows.map(r=>{
+    const blend=(r.pin!=null&&r.pout!=null)?(3*r.pin+r.pout)/4:null;
+    const per=blend&&blend>0?blend:null;
+    return Object.assign({},r,{blend,
+      codeval:r.code!=null&&per?r.code/per:(r.code!=null&&blend===0?Infinity:null),
+      smartval:r.ii!=null&&per?r.ii/per:(r.ii!=null&&blend===0?Infinity:null),
+      hrate:r.honest==null?null:Math.round((100-r.honest)*10)/10,
+      media:/image|audio|video/.test((r.mod||'').split('->')[1]||'')||/image|tts|audio/i.test(r.id)});
+  });
+  const provs=[...new Set(rows.map(r=>r.prov))].sort((a,b)=>a.localeCompare(b));
+  $('prov').insertAdjacentHTML('beforeend',provs.map(p=>'<option>'+esc(p)+'</option>').join(''));
+  const m=d.meta,dt=new Date(m.updated+'T12:00:00');
+  const subs=((sd&&sd.tools)||[]).map(t=>({prov:t.maker,model:t.tool,id:t.latest?'Latest model: '+t.latest:'',sub:true,kind:t.kind,plan:t.price,freePlan:t.free,api:t.api,url:t.url,note:t.note,where:'Subscription',blend:null,media:true}));
+  const provsAll=[...new Set(subs.map(r=>r.prov))].filter(p=>!provs.includes(p)).sort((a,b)=>a.localeCompare(b));
+  if(provsAll.length)$('prov').insertAdjacentHTML('beforeend',provsAll.map(p=>'<option>'+esc(p)+'</option>').join(''));
+  const apiCount=rows.length;rows=rows.concat(subs);
+  $('stamp').innerHTML='Updated <b>'+dt.toLocaleDateString('en-US',{month:'long',day:'numeric',year:'numeric'})+'</b><br>'+apiCount+' models · '+provs.length+' providers'+(subs.length?' · '+subs.length+' subscription tools':'');
+}
+
+function filtered(){
+  const q=state.q.trim().toLowerCase();
+  const n=v=>v===''||v==null?null:Number(v);
+  const maxin=n(state.maxin),maxout=n(state.maxout),mincode=n(state.mincode),mingpqa=n(state.mingpqa),minrel=n(state.minrel);
+  let out=rows.filter(r=>{
+    if(q&&!(r.model+' '+r.prov+' '+r.id).toLowerCase().includes(q))return false;
+    if(state.prov&&r.prov!==state.prov)return false;
+    if(r.sub){if(!state.subs)return false;const P=proj();if(!P)return true;if(P.id==='image')return /image/i.test(r.kind);if(P.id==='video')return /video/i.test(r.kind);return false}
+    if(state.minctx&&(r.ctx||0)<state.minctx)return false;
+    if(maxin!=null&&(r.pin==null||r.pin>maxin))return false;
+    if(maxout!=null&&(r.pout==null||r.pout>maxout))return false;
+    if(mincode!=null&&(r.code==null||r.code<mincode))return false;
+    if(mingpqa!=null&&(r.gpqa==null||r.gpqa<mingpqa))return false;
+    if(minrel!=null&&(r.rel==null||r.rel<minrel))return false;
+    if(state.where&&r.where!==state.where)return false;
+    if(state.scored&&r.ii==null&&r.code==null&&!proj())return false;
+    const P=proj();
+    if(P&&P.need&&!P.need(r))return false;
+    if(P&&P.id!=='image'&&P.score(r)==null)return false;
+    if(state.textonly&&r.media&&!(P&&P.id==='image'))return false;
+    if(state.freeonly&&!(r.free||r.blend===0))return false;
+    return true;
+  });
+  const P=proj();
+  if(P){const ts=P.tierScore||P.score;let mx=0;for(const r of out){if(r.sub)continue;r._score=P.score(r);r._t=ts(r);if(r._t!=null&&r._t>mx)mx=r._t}
+    for(const r of out){if(r.sub){r._tier=4;r._price=r.plan;continue}r._tier=P.id==='image'?1:(r._t==null?3:r._t>=mx*0.9?1:r._t>=mx*0.75?2:3);r._price=(P.price||(x=>x.blend))(r)}
+    if(state.sort[0]==='fit'){out.sort((a,b)=>a._tier-b._tier||((a._price??1e9)-(b._price??1e9))||((b._score||0)-(a._score||0)));return out}}
+  const [k,dir]=state.sort,sgn=dir==='asc'?1:-1;
+  out.sort((a,b)=>{let x=a[k],y=b[k];
+    if(x==null&&y==null)return 0;if(x==null)return 1;if(y==null)return -1;
+    if(typeof x==='string')return sgn*x.localeCompare(y);
+    if(x===y)return (b.ii||0)-(a.ii||0);
+    return sgn*(x<y?-1:1)});
+  return out;
+}
+
+function head(){
+  $('head').innerHTML=cols().map(c=>{
+    const aria=state.sort[0]===c.k?' aria-sort="'+(state.sort[1]==='asc'?'ascending':'descending')+'"':'';
+    return '<th class="'+(c.num?'num':'')+(c.sticky?' sticky':'')+(c.cls?' '+c.cls:'')+'"'+aria+'><button type="button" data-k="'+c.k+'" title="'+esc((c.d?c.d+' ':'')+'Click to sort.')+'">'+c.t+(c.src?'<small class="src">'+c.src+'</small>':'')+(c.s?'<small>'+c.s+'</small>':'')+'</button></th>'}).join('');
+}
+
+function render(){
+  const list=filtered();
+  $('count').innerHTML='Showing <b>'+list.length+'</b> of '+rows.length+' models and tools'+(state.sort[0]==='smartval'?' · sorted by smarts per dollar':'');
+  // picks
+  const scored=list.filter(r=>r.ii!=null||r.code!=null);
+  const pool=scored.length?scored:list;
+  const best=(arr,f,asc)=>{let b=null;for(const r of arr){const v=f(r);if(v==null||!isFinite(v))continue;if(b==null||(asc?v<b.v:v>b.v))b={r,v}}return b&&b.r};
+  const p1=list[0],p2=best(pool.filter(r=>r.blend>0),r=>r.blend,true),p3=state.sort[0]==='rel'?null:best(pool,r=>r.code),p4=best(list,r=>r.ctx),p5=state.sort[0]==='rel'?best(pool,r=>r.rel):null;
+  const card=(cls,k,r,extra)=>r?'<div class="pick'+cls+'"><span class="k">'+k+'</span><span class="n">'+esc(r.model)+'</span><span class="d">'+esc(r.prov)+' · '+extra(r)+'</span></div>':'';
+  const P=proj();
+  if(P&&list.length){const pr=r=>P.id==='image'?(r.pimg!=null?fmt$(r.pimg)+' per 1M image tokens':'price not listed'):typ(r);
+    const hi=P.id==='image'?null:best(list,r=>r._score),cheap=best(list.filter(r=>r._tier<=2&&(r._price||0)>0),r=>r._price,true);
+    $('picks').innerHTML=[card(' top','Best pick for '+P.t.toLowerCase(),list[0],r=>pr(r)+(r._score&&P.id!=='image'?' · score '+r._score.toFixed(1):'')),
+      card('','Highest score for this project',hi,r=>'score '+r._score.toFixed(1)+' · '+pr(r)),
+      card('','Cheapest paid model that does it well',cheap,r=>pr(r)+' · '+(['','top tier','strong'][r._tier]))].join('');
+  } else $('picks').innerHTML=list.length?[
+    card(' top','Top match for this view',p1,r=>typ(r)+(r.code!=null?' · coding '+r.code:'')),
+    card('','Cheapest paid model with scores',p2,r=>fmt$(r.blend)+' typical · smarts '+(r.ii??'–')),
+    card('','Best coder in this view',p3,r=>'coding '+r.code+' · '+typ(r)),
+    card('','Most reliable in this view',p5,r=>'reliability '+r.rel+' · '+typ(r)),
+    card('','Biggest context in this view',p4,r=>fmtCtx(r.ctx)+' tokens · '+typ(r))
+  ].join(''):'';
+  const shown=list.slice(0,400);
+  const cs=cols(),span=cs.length;
+  $('body').innerHTML=shown.length?shown.map((r,i)=>'<tr>'+cs.map(c=>c.cell(r,i)).join('')+'</tr>').join('')+(list.length>400?'<tr><td class="empty" colspan="'+span+'">Showing the first 400. Narrow the filters to see the rest.</td></tr>':'')
+  :'<tr><td class="empty" colspan="'+span+'">No models match these filters. Loosen one, or choose <b>Clear filters</b>.</td></tr>';
+  head();save();
+}
+
+function syncInputs(){
+  $('q').value=state.q;$('prov').value=state.prov;$('minctx').value=String(state.minctx);
+  $('maxin').value=state.maxin;$('maxout').value=state.maxout;$('mincode').value=state.mincode;$('mingpqa').value=state.mingpqa;$('minrel').value=state.minrel;
+  $('where').value=state.where;$('scored').checked=state.scored;$('textonly').checked=state.textonly;$('freeonly').checked=state.freeonly;$('subs').checked=state.subs;
+  $('goals').innerHTML=GOALS.map(g=>'<button class="goal" type="button" data-g="'+g.id+'" aria-pressed="'+(g.id===goal)+'">'+g.t+'</button>').join('');
+  $('projs').innerHTML='<button class="goal" type="button" data-p="" aria-pressed="'+(!state.proj)+'">Any project</button>'+PROJECTS.map(p=>'<button class="goal" type="button" data-p="'+p.id+'" aria-pressed="'+(p.id===state.proj)+'">'+p.t+'</button>').join('');
+  const P=proj();$('projnote').textContent=P?P.note+' Top tier = within 10% of the best score here; Strong = within 25%.':'Pick a project to rank models by how good they are at that job, cheapest first within each tier.';
+  const g=GOALS.find(g=>g.id===goal);$('goalnote').textContent=g?g.note:'Custom filters. Choose a goal above to start over from a preset.';
+}
+function setGoal(id){goal=id;const keep=state.textonly,ks=state.subs;state=fresh();state.textonly=keep;state.subs=ks;GOALS.find(g=>g.id===id).apply(state);syncInputs();render()}
+
+$('projs').addEventListener('click',e=>{const b=e.target.closest('[data-p]');if(!b)return;const keep=state.textonly,view=state.view,ks=state.subs;state=fresh();state.textonly=keep;state.view=view;state.subs=ks;state.proj=b.dataset.p;if(state.proj)state.sort=['fit','asc'];goal='';syncInputs();render()});
+$('goals').addEventListener('click',e=>{const b=e.target.closest('[data-g]');if(b)setGoal(b.dataset.g)});
+$('head').addEventListener('click',e=>{const b=e.target.closest('[data-k]');if(!b)return;const k=b.dataset.k;
+  const c=COLS.find(c=>c.k===k);const def=(['pin','pout','pcache','blend','prov','model','where','hrate'].includes(k))?'asc':'desc';
+  state.sort=k==='fit'?['fit','asc']:state.sort[0]===k?[k,state.sort[1]==='asc'?'desc':'asc']:[k,def];goal='';syncInputs();render()});
+$('sl').addEventListener('click',()=>$('tbox').scrollBy({left:-Math.round($('tbox').clientWidth*.7),behavior:'smooth'}));
+$('sr').addEventListener('click',()=>$('tbox').scrollBy({left:Math.round($('tbox').clientWidth*.7),behavior:'smooth'}));
+['q','maxin','maxout','mincode','mingpqa','minrel'].forEach(id=>$(id).addEventListener('input',()=>{state[id]=$(id).value;goal='';syncInputs();render()}));
+['prov','where'].forEach(id=>$(id).addEventListener('change',()=>{state[id]=$(id).value;goal='';syncInputs();render()}));
+$('minctx').addEventListener('change',()=>{state.minctx=Number($('minctx').value);goal='';syncInputs();render()});
+['scored','textonly','freeonly'].forEach(id=>$(id).addEventListener('change',()=>{state[id]=$(id).checked;goal='';syncInputs();render()}));
+$('subs').addEventListener('change',()=>{state.subs=$('subs').checked;syncInputs();render()});
+$('reset').addEventListener('click',()=>{state=fresh();goal='all';syncInputs();render()});
+
+load();
+Promise.all([fetch('models.json',{cache:'no-store'}).then(r=>{if(!r.ok)throw new Error(r.status);return r.json()}),fetch('subs.json',{cache:'no-store'}).then(r=>r.ok?r.json():null).catch(()=>null)]).then(([d,sd])=>{
+  prep(d,sd);if(goal&&GOALS.find(g=>g.id===goal)){const keep=state.textonly;state=fresh();state.textonly=keep;GOALS.find(g=>g.id===goal).apply(state)}
+  syncInputs();render();
+}).catch(err=>{$('body').innerHTML='<tr><td class="empty" colspan="12">The model list did not load ('+esc(err.message)+'). Reload the page to try again.</td></tr>';$('stamp').textContent='Data not loaded'});
+})();
+</script>
+
+<script>if('serviceWorker' in navigator){addEventListener('load',()=>navigator.serviceWorker.register('/sw.js').catch(()=>{}))}</script>
+</body>
+</html>
