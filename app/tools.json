@@ -245,6 +245,20 @@
 "setup": "Technical",
 "instead": "Instead of paid caption apps",
 "url": "https://developers.openai.com/api/docs/pricing"
+},
+"Ahrefs Starter": {
+"does": "Beginner SEO tool for keyword and site checks.",
+"cost": "$29/mo",
+"setup": "Easy",
+"instead": "Instead of Semrush ($139/mo)",
+"url": "https://ahrefs.com/pricing"
+},
+"Mailchimp": {
+"does": "All-in-one email marketing; easiest to start, costs more as your list grows.",
+"cost": "Essentials from $13/mo",
+"setup": "Easy",
+"instead": null,
+"url": "https://mailchimp.com/pricing/marketing/"
 }
 },
 "projects": {
@@ -275,17 +289,6 @@
 "Perplexity Pro",
 "Google NotebookLM",
 "Firecrawl"
-],
-"marketing": [
-"Firecrawl",
-"DataForSEO",
-"Google Search Console",
-"Google Analytics 4",
-"Amazon SES",
-"Listmonk",
-"Buffer",
-"Metricool",
-"Canva Pro"
 ],
 "finance": [
 "QuickBooks Online",
@@ -336,6 +339,31 @@
 "DaVinci Resolve",
 "OBS Studio",
 "OpenAI transcription API"
+],
+"email": [
+"Amazon SES",
+"Listmonk",
+"Mailchimp",
+"Hostinger VPS",
+"n8n (self-hosted)",
+"Canva Pro",
+"Google Sheets"
+],
+"seo": [
+"DataForSEO",
+"Firecrawl",
+"Google Search Console",
+"Google Analytics 4",
+"Ahrefs Starter",
+"Perplexity Pro"
+],
+"copy": [
+"Google Search Console",
+"DataForSEO",
+"Google NotebookLM",
+"Canva Pro",
+"Buffer",
+"Metricool"
 ]
 }
 }
