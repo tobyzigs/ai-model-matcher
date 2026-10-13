@@ -288,7 +288,7 @@ const PROJECTS=[
   {id:'agents',t:'Agents and automations',src:'Coding + tool use + low hallucination + long-context',note:'For scheduled tasks and n8n-style automations that run on their own. Ranked by the average of those four scores (at least 3), then cheapest first.',score:r=>avg([r.code,r.tool,r.honest,r.lcr],3)},
   {id:'docs',t:'Long documents and PDFs',src:'Long-context accuracy (AA-LCR)',note:'For reading contracts, statements, and long reports. Ranked by long-context accuracy, then cheapest first.',score:r=>r.lcr},
   {id:'image',t:'Image generation',src:'Image output price',note:'No independent quality score for image models is in this data yet, so these are ranked by image price only, cheapest first. Price is per 1 million image tokens; one image is usually about 1,000 to 1,300 tokens.',need:r=>has(r,'outm','image'),score:()=>0,price:r=>r.pimg},
-  {id:'video',t:'Video work',src:'Smarts, models that can watch video',note:'These models can watch video to plan edits, write scripts, and find clips. None of them edit video files; video editing tools charge per minute, not per token, so they aren\'t in this list. Ranked by smarts, then cheapest first.',need:r=>has(r,'inm','video'),score:r=>r.ii}
+  {id:'video',t:'Video editing',src:'Smarts, models that can watch video',note:'These models can watch video to plan edits, write scripts, and find clips. None of them edit video files; video editing tools charge per minute, not per token, so they aren\'t in this list. Ranked by smarts, then cheapest first.',need:r=>has(r,'inm','video'),score:r=>r.ii}
 ];
 const $=id=>document.getElementById(id);
 let rows=[],state=fresh(),goal='value';
@@ -378,12 +378,13 @@ function render(){
   const P=proj();
   if(P&&list.length){const pr=r=>P.id==='image'?(r.pimg!=null?fmt$(r.pimg)+' per 1M image tokens':'price not listed'):typ(r);
     const hi=P.id==='image'?null:best(list,r=>r._score),cheap=best(list.filter(r=>r._tier<=2&&(r._price||0)>0),r=>r._price,true);
-    $('picks').innerHTML=[card(' top','Best pick for '+P.t.toLowerCase(),list[0],r=>pr(r)+(r._score&&P.id!=='image'?' · score '+r._score.toFixed(1):'')),
-      card('','Highest score for this project',hi,r=>'score '+r._score.toFixed(1)+' · '+pr(r)),
-      card('','Cheapest paid model that does it well',cheap,r=>pr(r)+' · '+(['','top tier','strong'][r._tier]))].join('');
+    const line=r=>[P.id==='image'?'':['','Top tier','Strong','Fair'][r._tier],P.id!=='image'&&r._score!=null?'score '+r._score.toFixed(1):'',pr(r)].filter(Boolean).join(' · ');
+    $('picks').innerHTML=[card(' top','Best pick for '+P.t.toLowerCase(),list[0],line),
+      card('','Highest score for this project',hi,line),
+      card('','Cheapest paid model that does it well',cheap,line)].join('');
   } else $('picks').innerHTML=list.length?[
-    card(' top','Top match for this view',p1,r=>typ(r)+(r.code!=null?' · coding '+r.code:'')),
-    card('','Cheapest paid model with scores',p2,r=>fmt$(r.blend)+' typical · smarts '+(r.ii??'–')),
+    card(' top','Top match for this view',p1,r=>(r.ii!=null?'smarts '+r.ii:r.code!=null?'coding '+r.code:'no scores')+' · '+typ(r)),
+    card('','Cheapest paid model with scores',p2,r=>'smarts '+(r.ii??'–')+' · '+typ(r)),
     card('','Best coder in this view',p3,r=>'coding '+r.code+' · '+typ(r)),
     card('','Most reliable in this view',p5,r=>'reliability '+r.rel+' · '+typ(r)),
     card('','Biggest context in this view',p4,r=>fmtCtx(r.ctx)+' tokens · '+typ(r))
