@@ -12,7 +12,9 @@
 "stars": "62k GitHub stars",
 "early": false,
 "setup": "Easy",
-"url": "https://github.com/debpalash/VoiceStudio"
+"url": "https://github.com/debpalash/VoiceStudio",
+"found_on": "GitHub trending (this month)",
+"found_url": "https://github.com/trending?since=monthly"
 },
 {
 "name": "OpenScreen 2.0",
@@ -24,7 +26,9 @@
 "stars": "4k GitHub stars",
 "early": false,
 "setup": "Easy",
-"url": "https://getopenscreen.com/"
+"url": "https://getopenscreen.com/",
+"found_on": "Hacker News, Show HN",
+"found_url": "https://hn.algolia.com/?dateRange=pastMonth&query=OpenScreen"
 },
 {
 "name": "BetterWispr",
@@ -36,7 +40,9 @@
 "stars": "295 GitHub stars",
 "early": true,
 "setup": "Easy",
-"url": "https://betterwispr.com/"
+"url": "https://betterwispr.com/",
+"found_on": "Hacker News, Show HN",
+"found_url": "https://hn.algolia.com/?dateRange=pastMonth&query=BetterWispr"
 },
 {
 "name": "Rembrandt",
@@ -48,7 +54,9 @@
 "stars": "107 GitHub stars",
 "early": true,
 "setup": "Easy",
-"url": "https://github.com/thesnarkitecht/rembrandt"
+"url": "https://github.com/thesnarkitecht/rembrandt",
+"found_on": "Hacker News, Show HN",
+"found_url": "https://hn.algolia.com/?dateRange=pastMonth&query=Rembrandt%20Lightroom"
 },
 {
 "name": "Hedwig",
@@ -60,7 +68,9 @@
 "stars": "7 GitHub stars",
 "early": true,
 "setup": "Technical",
-"url": "https://flyhedwig.com"
+"url": "https://flyhedwig.com",
+"found_on": "Reddit, r/selfhosted",
+"found_url": "https://www.reddit.com/r/selfhosted/comments/1wue9jj/flyhedwig_a_free_and_opensource_alternative_to/"
 }
 ]
 }
