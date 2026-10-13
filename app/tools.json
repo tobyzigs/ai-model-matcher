@@ -1,0 +1,341 @@
+{
+"updated": "2026-10-13",
+"tools": {
+"OpenRouter": {
+"does": "One account and one bill for hundreds of AI models, including most models in this list.",
+"cost": "5.5% fee when you buy credits by card",
+"setup": "Easy",
+"instead": null,
+"url": "https://openrouter.ai/pricing"
+},
+"GitHub": {
+"does": "Stores your code and its history; also hosts simple sites.",
+"cost": "Free plan",
+"setup": "Some setup",
+"instead": null,
+"url": "https://github.com/pricing"
+},
+"Netlify": {
+"does": "Publishes websites and web apps straight from GitHub.",
+"cost": "Free plan; Personal $9/mo",
+"setup": "Some setup",
+"instead": null,
+"url": "https://www.netlify.com/pricing/"
+},
+"Cloudflare Pages": {
+"does": "Free website hosting with unlimited sites and bandwidth.",
+"cost": "Free plan; Pro $20/mo",
+"setup": "Some setup",
+"instead": "Instead of paid web hosting",
+"url": "https://pages.cloudflare.com/"
+},
+"Visual Studio Code": {
+"does": "Free code editor that works with AI coding add-ons.",
+"cost": "Free",
+"setup": "Some setup",
+"instead": null,
+"url": "https://code.visualstudio.com/"
+},
+"Cursor": {
+"does": "Code editor with AI built in.",
+"cost": "Free plan; paid from $8/mo",
+"setup": "Easy",
+"instead": null,
+"url": "https://cursor.com/pricing"
+},
+"Figma": {
+"does": "Design screens, mockups, and layouts that AI can turn into code.",
+"cost": "Free plan; Professional $15/mo",
+"setup": "Easy",
+"instead": null,
+"url": "https://www.figma.com/pricing/"
+},
+"Canva Pro": {
+"does": "Easy design editor for social posts, flyers, and brand kits.",
+"cost": "$144/year (about $12/mo)",
+"setup": "Easy",
+"instead": null,
+"url": "https://www.canva.com/pricing/"
+},
+"Google NotebookLM": {
+"does": "Upload documents and ask questions answered only from them.",
+"cost": "Free plan",
+"setup": "Easy",
+"instead": null,
+"url": "https://notebook.google/plans"
+},
+"Perplexity Pro": {
+"does": "AI search that cites its sources; good for research.",
+"cost": "$17/mo billed yearly",
+"setup": "Easy",
+"instead": null,
+"url": "https://www.perplexity.ai/pro"
+},
+"Firecrawl": {
+"does": "Turns websites into clean text AI can read; tracks competitor pages.",
+"cost": "Free 1,000 credits/mo; Hobby $19/mo",
+"setup": "Some setup",
+"instead": null,
+"url": "https://www.firecrawl.dev/pricing"
+},
+"DataForSEO": {
+"does": "Keyword, ranking, and competitor SEO data, paid only for what you use.",
+"cost": "Pay as you go; $50 minimum top-up",
+"setup": "Technical",
+"instead": "Instead of Semrush ($139/mo) or Ahrefs ($129/mo)",
+"url": "https://dataforseo.com/pricing"
+},
+"Google Search Console": {
+"does": "Shows which Google searches bring people to your site.",
+"cost": "Free",
+"setup": "Easy",
+"instead": null,
+"url": "https://search.google.com/search-console/about"
+},
+"Google Analytics 4": {
+"does": "Tracks site visitors, sources, and sales.",
+"cost": "Free",
+"setup": "Some setup",
+"instead": null,
+"url": "https://marketingplatform.google.com/about/analytics/"
+},
+"Amazon SES": {
+"does": "Sends marketing and order emails at very low cost.",
+"cost": "$0.10 per 1,000 emails",
+"setup": "Technical",
+"instead": "Instead of Mailchimp (from $13/mo)",
+"url": "https://aws.amazon.com/ses/pricing/"
+},
+"Listmonk": {
+"does": "Free newsletter and mailing-list app that sends through Amazon SES.",
+"cost": "Free; you pay only for hosting",
+"setup": "Technical",
+"instead": "Instead of Mailchimp",
+"url": "https://listmonk.app/"
+},
+"Buffer": {
+"does": "Schedules social media posts.",
+"cost": "Free up to 3 channels; $5 per channel/mo",
+"setup": "Easy",
+"instead": null,
+"url": "https://buffer.com/pricing"
+},
+"Metricool": {
+"does": "Schedules posts and tracks social and ad results in one place.",
+"cost": "Free plan; Starter $25/mo",
+"setup": "Easy",
+"instead": null,
+"url": "https://metricool.com/pricing/"
+},
+"n8n (self-hosted)": {
+"does": "Connects apps and AI into automations that run on their own.",
+"cost": "Free software; you pay only for a server",
+"setup": "Technical",
+"instead": "Instead of Zapier ($19.99/mo and up)",
+"url": "https://n8n.io/pricing/"
+},
+"Make.com": {
+"does": "Visual automation builder; easier than n8n, cheaper than Zapier.",
+"cost": "Free 1,000 credits/mo; Core from $12/mo",
+"setup": "Some setup",
+"instead": "Instead of Zapier",
+"url": "https://www.make.com/en/pricing"
+},
+"Hostinger VPS": {
+"does": "A small private server to run n8n, Listmonk, and similar free tools.",
+"cost": "From $6.49/mo (renews $11.99/mo)",
+"setup": "Technical",
+"instead": null,
+"url": "https://www.hostinger.com/vps-hosting"
+},
+"Google Sheets": {
+"does": "Free spreadsheets that AI tools and automations can read and update.",
+"cost": "Free",
+"setup": "Easy",
+"instead": null,
+"url": "https://workspace.google.com/products/sheets/"
+},
+"Airtable": {
+"does": "Spreadsheet-database for trackers and simple apps.",
+"cost": "Free plan; Team $20/user/mo",
+"setup": "Easy",
+"instead": null,
+"url": "https://airtable.com/pricing"
+},
+"QuickBooks Online": {
+"does": "Bookkeeping; connects to Claude for reports.",
+"cost": "Simple Start $38/mo",
+"setup": "Easy",
+"instead": null,
+"url": "https://quickbooks.intuit.com/pricing/"
+},
+"Wave": {
+"does": "Free bookkeeping and invoicing for small businesses.",
+"cost": "Free plan; Pro $19/mo",
+"setup": "Easy",
+"instead": "Instead of QuickBooks",
+"url": "https://www.waveapps.com/pricing"
+},
+"Tesseract OCR": {
+"does": "Free tool that reads text from scanned receipts and PDFs.",
+"cost": "Free",
+"setup": "Technical",
+"instead": "Instead of paid OCR apps",
+"url": "https://github.com/tesseract-ocr/tesseract"
+},
+"Adobe Acrobat Standard": {
+"does": "Edit, sign, combine, and convert PDFs.",
+"cost": "$24.99/mo month to month",
+"setup": "Easy",
+"instead": null,
+"url": "https://www.adobe.com/acrobat/pricing.html"
+},
+"Help Scout": {
+"does": "Shared inbox with saved replies for customer service.",
+"cost": "Free plan (5 users, 1 inbox)",
+"setup": "Easy",
+"instead": null,
+"url": "https://www.helpscout.com/pricing/"
+},
+"Gmail templates": {
+"does": "Saved replies you insert with one click.",
+"cost": "Free",
+"setup": "Easy",
+"instead": null,
+"url": "https://support.google.com/mail/answer/14864208"
+},
+"Upscayl": {
+"does": "Free app that enlarges images without losing quality.",
+"cost": "Free",
+"setup": "Easy",
+"instead": "Instead of paid upscalers",
+"url": "https://upscayl.org/"
+},
+"Photopea": {
+"does": "Free Photoshop-style editor in your browser.",
+"cost": "Free with ads",
+"setup": "Easy",
+"instead": "Instead of Photoshop",
+"url": "https://www.photopea.com/"
+},
+"ComfyUI": {
+"does": "Runs open image models on your own computer for free.",
+"cost": "Free",
+"setup": "Technical",
+"instead": "Instead of paying per image",
+"url": "https://www.comfy.org/"
+},
+"DaVinci Resolve": {
+"does": "Professional video editor with a strong free version.",
+"cost": "Free; Studio $295 one-time",
+"setup": "Some setup",
+"instead": "Instead of Premiere Pro",
+"url": "https://www.blackmagicdesign.com/products/davinciresolve"
+},
+"OBS Studio": {
+"does": "Free screen and camera recording.",
+"cost": "Free",
+"setup": "Some setup",
+"instead": null,
+"url": "https://obsproject.com/"
+},
+"OpenAI transcription API": {
+"does": "Turns audio and video into text for captions and scripts.",
+"cost": "About $0.003 to $0.006 per minute",
+"setup": "Technical",
+"instead": "Instead of paid caption apps",
+"url": "https://developers.openai.com/api/docs/pricing"
+}
+},
+"projects": {
+"all": [
+"OpenRouter",
+"Google Sheets",
+"n8n (self-hosted)"
+],
+"webcode": [
+"GitHub",
+"Netlify",
+"Cloudflare Pages",
+"Visual Studio Code",
+"Cursor"
+],
+"webdesign": [
+"Figma",
+"Canva Pro",
+"Netlify",
+"Cloudflare Pages",
+"Photopea"
+],
+"basic": [
+"OpenRouter",
+"Google NotebookLM"
+],
+"complex": [
+"Perplexity Pro",
+"Google NotebookLM",
+"Firecrawl"
+],
+"marketing": [
+"Firecrawl",
+"DataForSEO",
+"Google Search Console",
+"Google Analytics 4",
+"Amazon SES",
+"Listmonk",
+"Buffer",
+"Metricool",
+"Canva Pro"
+],
+"finance": [
+"QuickBooks Online",
+"Wave",
+"Google Sheets",
+"Tesseract OCR",
+"n8n (self-hosted)"
+],
+"replies": [
+"Help Scout",
+"Gmail templates",
+"n8n (self-hosted)",
+"Google Sheets"
+],
+"sheets": [
+"Google Sheets",
+"Airtable",
+"n8n (self-hosted)",
+"Make.com"
+],
+"agents": [
+"n8n (self-hosted)",
+"Make.com",
+"Hostinger VPS",
+"OpenRouter",
+"Firecrawl",
+"GitHub"
+],
+"docs": [
+"Google NotebookLM",
+"Adobe Acrobat Standard",
+"Tesseract OCR",
+"Firecrawl"
+],
+"image": [
+"Upscayl",
+"Photopea",
+"ComfyUI",
+"Canva Pro"
+],
+"design": [
+"Canva Pro",
+"Figma",
+"Photopea",
+"Upscayl"
+],
+"video": [
+"DaVinci Resolve",
+"OBS Studio",
+"OpenAI transcription API"
+]
+}
+}

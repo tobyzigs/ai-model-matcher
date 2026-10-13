@@ -112,6 +112,14 @@ td.prov{white-space:nowrap}
 .notes a{color:var(--accent)}
 .empty{padding:30px;text-align:center;color:var(--muted)}
 td.fit{white-space:nowrap}
+.helpgrid{display:grid;grid-template-columns:repeat(auto-fill,minmax(250px,1fr));gap:12px}
+.help{border:1px solid var(--line);border-radius:8px;padding:12px 14px;display:flex;flex-direction:column;gap:4px;min-width:0;background:var(--bg)}
+.help .hn{font-weight:600;font-size:15px;color:var(--accent);text-decoration:none}
+.help .hn:hover{text-decoration:underline}
+.help .hd{font-size:13.5px}
+.help .hc{font-family:var(--f-mono);font-size:12.5px;color:var(--ink)}
+.help .hi{font-size:12.5px;color:var(--pick);font-weight:600}
+.help .hs{align-self:flex-start;font-size:10.5px;font-weight:600;letter-spacing:.03em;text-transform:uppercase;border-radius:4px;padding:1px 6px;background:var(--bar-bg);color:var(--muted)}
 td.notes{min-width:260px;max-width:340px;white-space:normal;font-size:12.5px;color:var(--muted)}
 td.notes b{color:var(--ink);font-weight:600}
 .tier{display:inline-block;font-size:10.5px;font-weight:600;letter-spacing:.03em;text-transform:uppercase;border-radius:4px;padding:1px 6px;margin-right:6px;font-family:var(--f-body)}
@@ -178,6 +186,7 @@ td.model .pv{display:none;font-size:11.5px;color:var(--muted)}
       <div><dt>Typical cost</dt><dd>One number to compare models: 3 parts input to 1 part output, a common mix for chat and agent work.</dd></div>
       <div><dt>Coding per $</dt><dd>Coding score divided by typical cost. Higher means more coding skill for each dollar.</dd></div>
       <div><dt>Subscription-only tools</dt><dd>Image and video apps you pay for by the month instead of by the token, such as Midjourney, Runway, and Descript. Turn on <b>Show subscription-only tools</b> in the filters to list them. They have no test scores here, and their prices and notes come from each maker's pricing page as of the date shown at the top.</dd></div>
+      <div><dt>Helpful tools</dt><dd>Outside tools people often use with AI for each project type, listed below the table. Setup shows how much work each takes: Easy, Some setup, or Technical. Prices come from each tool's pricing page as of the date at the top.</dd></div>
       <div><dt>Where to buy</dt><dd>"OpenRouter" means you can use it through one OpenRouter account. "Maker only" means you buy it from the company that made it.</dd></div>
     </dl>
     <h3>Scores (0 to 100, higher is better)</h3>
@@ -226,6 +235,12 @@ td.model .pv{display:none;font-size:11.5px;color:var(--muted)}
     <thead><tr id="head"></tr></thead>
     <tbody id="body"><tr><td class="empty" colspan="12">Loading models…</td></tr></tbody>
   </table></div>
+
+  <section class="panel helpers" aria-label="Helpful tools">
+    <span class="label" id="helptitle">Helpful tools for any project</span>
+    <p class="goalnote">Tools people often pair with AI models. The cheaper options can take more setup, but the savings are often worth it.</p>
+    <div class="helpgrid" id="helpgrid"></div>
+  </section>
 
   <div class="notes">
     <p><b>Sources.</b> Prices and context: <a href="https://openrouter.ai/models" target="_blank" rel="noopener">OpenRouter model list</a>. Scores, and prices for models sold only by their maker: <a href="https://artificialanalysis.ai/leaderboards/models" target="_blank" rel="noopener">Artificial Analysis leaderboard</a>. A weekly update refreshes both.</p>
@@ -367,7 +382,11 @@ function head(){
     return '<th class="'+(c.num?'num':'')+(c.sticky?' sticky':'')+(c.cls?' '+c.cls:'')+'"'+aria+'><button type="button" data-k="'+c.k+'" title="'+esc((c.d?c.d+' ':'')+'Click to sort.')+'">'+c.t+(c.src?'<small class="src">'+c.src+'</small>':'')+(c.s?'<small>'+c.s+'</small>':'')+'</button></th>'}).join('');
 }
 
-function render(){
+let HELP=null;
+function renderHelpers(){if(!HELP)return;const P=proj();const names=(P&&HELP.projects[P.id])||HELP.projects.all||[];
+  $('helptitle').textContent='Helpful tools for '+(P?P.t.toLowerCase():'any project');
+  $('helpgrid').innerHTML=names.map(n=>{const t=HELP.tools[n];if(!t)return '';return '<div class="help"><a class="hn" href="'+esc(t.url)+'" target="_blank" rel="noopener">'+esc(n)+'</a><span class="hd">'+esc(t.does)+'</span><span class="hc">'+esc(t.cost)+'</span>'+(t.instead?'<span class="hi">'+esc(t.instead)+'</span>':'')+'<span class="hs">'+esc(t.setup)+'</span></div>'}).join('')}
+function render(){renderHelpers();
   const list=filtered();
   $('count').innerHTML='Showing <b>'+list.length+'</b> of '+rows.length+' models and tools'+(state.sort[0]==='smartval'?' · sorted by smarts per dollar':'');
   // picks
@@ -423,7 +442,8 @@ $('subs').addEventListener('change',()=>{state.subs=$('subs').checked;syncInputs
 $('reset').addEventListener('click',()=>{state=fresh();goal='all';syncInputs();render()});
 
 load();
-Promise.all([fetch('models.json',{cache:'no-store'}).then(r=>{if(!r.ok)throw new Error(r.status);return r.json()}),fetch('subs.json',{cache:'no-store'}).then(r=>r.ok?r.json():null).catch(()=>null)]).then(([d,sd])=>{
+Promise.all([fetch('models.json',{cache:'no-store'}).then(r=>{if(!r.ok)throw new Error(r.status);return r.json()}),fetch('subs.json',{cache:'no-store'}).then(r=>r.ok?r.json():null).catch(()=>null),fetch('tools.json',{cache:'no-store'}).then(r=>r.ok?r.json():null).catch(()=>null)]).then(([d,sd,td])=>{
+  HELP=td;
   prep(d,sd);if(goal&&GOALS.find(g=>g.id===goal)){const keep=state.textonly;state=fresh();state.textonly=keep;GOALS.find(g=>g.id===goal).apply(state)}
   syncInputs();render();
 }).catch(err=>{$('body').innerHTML='<tr><td class="empty" colspan="12">The model list did not load ('+esc(err.message)+'). Reload the page to try again.</td></tr>';$('stamp').textContent='Data not loaded'});

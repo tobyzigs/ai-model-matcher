@@ -8,7 +8,7 @@ A weekly Claude scheduled task ("AI Model Matcher weekly update") refreshes the 
 
 1. It downloads prices from the OpenRouter model list and scores from Artificial Analysis into `data/or.json` and `data/aa.json`.
 2. `python3 -I scripts/build.py` (run from the repo root) writes `models.json`, which is copied to `app/models.json`.
-3. It rechecks subscription tool prices and updates `app/subs.json`.
+3. It rechecks subscription tool prices in `app/subs.json` and helper tool prices in `app/tools.json`.
 4. It commits and pushes. Netlify publishes each push.
 
 ## Files
