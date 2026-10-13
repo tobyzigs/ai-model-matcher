@@ -1,0 +1,66 @@
+{
+"updated": "2026-10-13",
+"week": "Week of October 13, 2026",
+"picks": [
+{
+"name": "VoiceStudio",
+"use": "AI voiceovers, dubbing, and transcription",
+"replaces": "ElevenLabs",
+"paid": "$11 to $99/mo",
+"what": "Free desktop app that clones voices, makes voiceovers, dubs videos, and transcribes audio on your own computer.",
+"license": "AGPL-3.0",
+"stars": "62k GitHub stars",
+"early": false,
+"setup": "Easy",
+"url": "https://github.com/debpalash/VoiceStudio"
+},
+{
+"name": "OpenScreen 2.0",
+"use": "Polished screen-recording demo videos",
+"replaces": "Screen Studio",
+"paid": "$29/mo",
+"what": "Free screen recorder and editor with automatic zooms, backgrounds, and captions, and no watermark.",
+"license": "MIT",
+"stars": "4k GitHub stars",
+"early": false,
+"setup": "Easy",
+"url": "https://getopenscreen.com/"
+},
+{
+"name": "BetterWispr",
+"use": "Voice typing into any app (Mac)",
+"replaces": "Wispr Flow",
+"paid": "$15/mo",
+"what": "Hold a shortcut, speak, and clean text types into any app. Runs on your Mac, macOS 14 or newer.",
+"license": "Apache-2.0",
+"stars": "295 GitHub stars",
+"early": true,
+"setup": "Easy",
+"url": "https://betterwispr.com/"
+},
+{
+"name": "Rembrandt",
+"use": "Editing photos, including RAW files",
+"replaces": "Adobe Lightroom",
+"paid": "$11.99/mo",
+"what": "Free photo editor with RAW support, masks, and on-device AI. No account or subscription.",
+"license": "GPL-3.0",
+"stars": "107 GitHub stars",
+"early": true,
+"setup": "Easy",
+"url": "https://github.com/thesnarkitecht/rembrandt"
+},
+{
+"name": "Hedwig",
+"use": "Cold email outreach campaigns",
+"replaces": "Instantly, Smartlead, lemlist",
+"paid": "$47/mo",
+"what": "Sends multi-step email sequences from your own mailboxes and labels every reply.",
+"license": "MIT",
+"stars": "7 GitHub stars",
+"early": true,
+"setup": "Technical",
+"url": "https://flyhedwig.com"
+}
+]
+}

@@ -116,7 +116,10 @@ td.fit{white-space:nowrap}
 .help{border:1px solid var(--line);border-radius:8px;padding:12px 14px;display:flex;flex-direction:column;gap:4px;min-width:0;background:var(--bg)}
 .help .hn{font-weight:600;font-size:15px;color:var(--accent);text-decoration:none}
 .help .hn:hover{text-decoration:underline}
-.help .hd{font-size:13.5px}
+.help .hu{font-size:13px;font-weight:600;color:var(--ink)}
+.help .hd{font-size:13.5px;color:var(--muted)}
+.help .tagrow{display:flex;flex-wrap:wrap;gap:6px}
+.help .early{background:var(--pick-soft);color:var(--pick)}
 .help .hc{font-family:var(--f-mono);font-size:12.5px;color:var(--ink)}
 .help .hi{font-size:12.5px;color:var(--pick);font-weight:600}
 .help .hs{align-self:flex-start;font-size:10.5px;font-weight:600;letter-spacing:.03em;text-transform:uppercase;border-radius:4px;padding:1px 6px;background:var(--bar-bg);color:var(--muted)}
@@ -242,6 +245,12 @@ td.model .pv{display:none;font-size:11.5px;color:var(--muted)}
     <div class="helpgrid" id="helpgrid"></div>
   </section>
 
+  <section class="panel helpers" aria-label="New and notable">
+    <span class="label" id="notetitle">New and notable money savers</span>
+    <p class="goalnote">Top 5 new or trending free, open-source tools that can replace something you pay for. Updated weekly. Brand-new projects can have bugs, so test them before you rely on them.</p>
+    <div class="helpgrid" id="notegrid"></div>
+  </section>
+
   <div class="notes">
     <p><b>Sources.</b> Prices and context: <a href="https://openrouter.ai/models" target="_blank" rel="noopener">OpenRouter model list</a>. Scores, and prices for models sold only by their maker: <a href="https://artificialanalysis.ai/leaderboards/models" target="_blank" rel="noopener">Artificial Analysis leaderboard</a>. A weekly update refreshes both.</p>
   </div>
@@ -299,6 +308,7 @@ const PROJECTS=[
   {id:'email',t:'Email marketing',src:'GDPval writing + low hallucination',note:'For newsletters, campaigns, and email sequences. Ranked by real-work writing quality (GDPval) averaged with how rarely the model makes things up, so it won\'t invent prices or claims. Cheapest first within each tier.',score:r=>avg([r.gdp,r.honest],2)},
   {id:'seo',t:'SEO and GEO strategy',src:'Fact accuracy + long-context + GDPval',note:'For keyword research, competitor analysis, and planning how to show up in Google and in AI answers (GEO). Ranked by fact accuracy, long-document reasoning, and real-work quality (at least 2 of 3), then cheapest first.',score:r=>avg([r.acc,r.lcr,r.gdp],2)},
   {id:'copy',t:'Copywriting and content',src:'GDPval writing + follows rules',note:'For keyword-rich product descriptions, tags, blog posts, and video or content ideas. Ranked by real-work writing quality (GDPval), averaged with how well it follows exact instructions when that score exists, then cheapest first.',score:r=>r.gdp==null?null:(r.instr!=null?(r.gdp+r.instr)/2:r.gdp)},
+  {id:'social',t:'Social media and ads',src:'GDPval writing + follows rules + reading images',note:'For captions, ad copy, post ideas, and checking ad images. Ranked by real-work writing quality, how well it follows exact rules (character limits, hashtags), and image understanding (at least 2 of 3), then cheapest first.',score:r=>avg([r.gdp,r.instr,r.vis],2)},
   {id:'finance',t:'Finance and bookkeeping',src:'Fact accuracy + low hallucination + GDPval + banking tasks',note:'Money work needs right answers and no made-up numbers. Ranked by the average of fact accuracy, how rarely it bluffs, real-work quality, and banking-task scores (at least 3 of the 4), then cheapest first.',score:r=>avg([r.acc,r.honest,r.gdp,r.bank],3)},
   {id:'replies',t:'Customer replies',src:'Follows rules + low hallucination + tool use',note:'For Etsy and email replies: follows your rules, doesn\'t invent facts, and handles back-and-forth. Ranked by the average of those scores (at least 2), then cheapest first.',score:r=>avg([r.instr,r.honest,r.tool,r.bank],2)},
   {id:'sheets',t:'Spreadsheets and data',src:'Data analysis (AA-AnalystAgent) + long-context + coding',note:'For reports, trackers, and number crunching. Ranked by the average of data-analysis, long-context, and coding scores (at least 2), then cheapest first.',score:r=>avg([r.analyst,r.lcr,r.code],2)},
@@ -384,11 +394,13 @@ function head(){
     return '<th class="'+(c.num?'num':'')+(c.sticky?' sticky':'')+(c.cls?' '+c.cls:'')+'"'+aria+'><button type="button" data-k="'+c.k+'" title="'+esc((c.d?c.d+' ':'')+'Click to sort.')+'">'+c.t+(c.src?'<small class="src">'+c.src+'</small>':'')+(c.s?'<small>'+c.s+'</small>':'')+'</button></th>'}).join('');
 }
 
-let HELP=null;
+let HELP=null,NOTE=null;
+function renderNotable(){if(!NOTE)return;$('notetitle').textContent='New and notable money savers · '+(NOTE.week||'');
+  $('notegrid').innerHTML=(NOTE.picks||[]).map(t=>'<div class="help"><a class="hn" href="'+esc(t.url)+'" target="_blank" rel="noopener">'+esc(t.name)+'</a><span class="hu">Used for: '+esc(t.use)+'</span><span class="hi">Replaces '+esc(t.replaces)+(t.paid?' ('+esc(t.paid)+')':'')+'</span><span class="hd">'+esc(t.what)+'</span><span class="hc">Free · '+esc(t.license)+' · '+esc(t.stars)+'</span><span class="tagrow"><span class="hs">'+esc(t.setup)+'</span>'+(t.early?'<span class="hs early">Early stage</span>':'')+'</span></div>').join('')}
 function renderHelpers(){if(!HELP)return;const P=proj();const names=(P&&HELP.projects[P.id])||HELP.projects.all||[];
   $('helptitle').textContent='Helpful tools for '+(P?P.t.toLowerCase():'any project');
-  $('helpgrid').innerHTML=names.map(n=>{const t=HELP.tools[n];if(!t)return '';return '<div class="help"><a class="hn" href="'+esc(t.url)+'" target="_blank" rel="noopener">'+esc(n)+'</a><span class="hd">'+esc(t.does)+'</span><span class="hc">'+esc(t.cost)+'</span>'+(t.instead?'<span class="hi">'+esc(t.instead)+'</span>':'')+'<span class="hs">'+esc(t.setup)+'</span></div>'}).join('')}
-function render(){renderHelpers();
+  $('helpgrid').innerHTML=names.map(n=>{const t=HELP.tools[n];if(!t)return '';return '<div class="help"><a class="hn" href="'+esc(t.url)+'" target="_blank" rel="noopener">'+esc(n)+'</a>'+(t.use?'<span class="hu">Used for: '+esc(t.use)+'</span>':'')+'<span class="hd">'+esc(t.does)+'</span><span class="hc">'+esc(t.cost)+'</span>'+(t.instead?'<span class="hi">'+esc(t.instead)+'</span>':'')+'<span class="hs">'+esc(t.setup)+'</span></div>'}).join('')}
+function render(){renderHelpers();renderNotable();
   const list=filtered();
   $('count').innerHTML='Showing <b>'+list.length+'</b> of '+rows.length+' models and tools'+(state.sort[0]==='smartval'?' · sorted by smarts per dollar':'');
   // picks
@@ -444,8 +456,8 @@ $('subs').addEventListener('change',()=>{state.subs=$('subs').checked;syncInputs
 $('reset').addEventListener('click',()=>{state=fresh();goal='all';syncInputs();render()});
 
 load();
-Promise.all([fetch('models.json',{cache:'no-store'}).then(r=>{if(!r.ok)throw new Error(r.status);return r.json()}),fetch('subs.json',{cache:'no-store'}).then(r=>r.ok?r.json():null).catch(()=>null),fetch('tools.json',{cache:'no-store'}).then(r=>r.ok?r.json():null).catch(()=>null)]).then(([d,sd,td])=>{
-  HELP=td;
+Promise.all([fetch('models.json',{cache:'no-store'}).then(r=>{if(!r.ok)throw new Error(r.status);return r.json()}),fetch('subs.json',{cache:'no-store'}).then(r=>r.ok?r.json():null).catch(()=>null),fetch('tools.json',{cache:'no-store'}).then(r=>r.ok?r.json():null).catch(()=>null),fetch('notable.json',{cache:'no-store'}).then(r=>r.ok?r.json():null).catch(()=>null)]).then(([d,sd,td,nd])=>{
+  HELP=td;NOTE=nd;
   prep(d,sd);if(goal&&GOALS.find(g=>g.id===goal)){const keep=state.textonly;state=fresh();state.textonly=keep;GOALS.find(g=>g.id===goal).apply(state)}
   syncInputs();render();
 }).catch(err=>{$('body').innerHTML='<tr><td class="empty" colspan="12">The model list did not load ('+esc(err.message)+'). Reload the page to try again.</td></tr>';$('stamp').textContent='Data not loaded'});
