@@ -312,6 +312,14 @@
 "instead": "Instead of paid heatmap tools",
 "url": "https://clarity.microsoft.com/",
 "use": "Heatmaps and visitor recordings"
+},
+"Krita": {
+"does": "Free professional painting and drawing app.",
+"cost": "Free",
+"setup": "Easy",
+"instead": "Instead of Procreate or Photoshop for painting",
+"url": "https://krita.org/",
+"use": "Digital painting and drawing"
 }
 },
 "projects": {
@@ -424,6 +432,12 @@
 "Metricool",
 "Canva Pro",
 "Google Analytics 4",
+"Upscayl",
+"Photopea"
+],
+"art": [
+"ComfyUI",
+"Krita",
 "Upscayl",
 "Photopea"
 ]

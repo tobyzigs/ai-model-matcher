@@ -174,6 +174,8 @@ td.model .pv{display:none;font-size:11.5px;color:var(--muted)}
       <div><dt>Typical cost</dt><dd>One number to compare models: 3 parts input to 1 part output, a common mix for chat and agent work.</dd></div>
       <div><dt>Coding per $</dt><dd>Coding score divided by typical cost. Higher means more coding skill for each dollar.</dd></div>
       <div><dt>Subscription-only tools</dt><dd>Image and video apps you pay for by the month instead of by the token, such as Midjourney, Runway, and Descript. Turn on <b>Show subscription-only tools</b> in the filters to list them. They have no test scores here, and their prices and notes come from each maker's pricing page as of the date shown at the top.</dd></div>
+      <div><dt>Image quality (Elo)</dt><dd>A score from blind votes where people pick the better of two images made from the same prompt (Artificial Analysis Image Arena). Higher is better; 1000 is the baseline. It rates overall quality, not one style. Shows only on the image projects.</dd></div>
+      <div><dt>Free to download</dt><dd>The model's files are public, so you can run it free on your own computer with a tool like ComfyUI, if your computer is powerful enough.</dd></div>
       <div><dt>Helpful tools</dt><dd>Outside tools people often use with AI for each project type, listed below the table. Setup shows how much work each takes: Easy, Some setup, or Technical. Prices come from each tool's pricing page as of the date at the top.</dd></div>
       <div><dt>Where to buy</dt><dd>"OpenRouter" means you can use it through one OpenRouter account. "Maker only" means you buy it from the company that made it.</dd></div>
     </dl>
@@ -246,7 +248,7 @@ td.model .pv{display:none;font-size:11.5px;color:var(--muted)}
 const NA='<span class="na">&ndash;</span>';
 const COLS=[
   {k:'prov',t:'Provider',v:'psra',cls:'provcol',cell:r=>'<td class="prov provcol">'+esc(r.prov)+'</td>'},
-  {k:'model',t:'Model',v:'psra',sticky:1,cell:(r,i)=>'<td class="model sticky"><div class="mn">'+esc(r.model)+'</div><div class="pv">'+esc(r.prov)+'</div><div class="id">'+esc(r.id)+'</div>'+(i===0?'<span class="tag best">Top match</span>':'')+(r.free||r.blend===0?'<span class="tag free">Free</span>':'')+(r.sub?'<span class="tag direct">Subscription</span>':'')+'</td>'},
+  {k:'model',t:'Model',v:'psra',sticky:1,cell:(r,i)=>'<td class="model sticky"><div class="mn">'+esc(r.model)+'</div><div class="pv">'+esc(r.prov)+'</div><div class="id">'+esc(r.id)+'</div>'+(i===0?'<span class="tag best">Top match</span>':'')+(r.free||r.blend===0?'<span class="tag free">Free</span>':'')+(r.sub?'<span class="tag direct">Subscription</span>':'')+(r.open?'<span class="tag free">Free to download</span>':'')+'</td>'},
   {k:'pb',t:'Parameters',src:'Published size',s:'billions · bigger knows more, costs more',num:1,v:'psra',cell:r=>'<td class="num params">'+(r.pb?fmtB(r.pb)+(r.pa?'<small>'+fmtB(r.pa)+' active</small>':''):(r.size?'<span class="na">'+r.size[0].toUpperCase()+r.size.slice(1)+'</span><small>not published</small>':NA))+'</td>'},
   {k:'ctx',t:'Context',src:'Max tokens it reads at once',s:'higher is better',num:1,v:'psra',cell:r=>'<td class="num">'+fmtCtx(r.ctx)+'</td>'},
   {k:'pin',t:'Input',src:'$ per 1M tokens sent',s:'lower is better',num:1,v:'pa',cell:r=>'<td class="num">'+fmt$(r.pin)+'</td>'},
@@ -263,12 +265,12 @@ const COLS=[
   {k:'gpqa',t:'GPQA',src:'GPQA Diamond',s:'0 to 100 · higher is better',num:1,v:'sa',cell:r=>'<td class="num">'+meter(r.gpqa,100)+'</td>'},
   {k:'ii',t:'Smarts',src:'AA Intelligence Index',s:'0 to 100 · higher is better',num:1,v:'sa',cell:r=>'<td class="num">'+meter(r.ii,60)+'</td>'},
   {k:'codeval',t:'Coding per $',src:'Coding ÷ Typical cost',s:'higher is better',num:1,v:'psa',cell:r=>'<td class="num">'+(r.codeval==null?NA:isFinite(r.codeval)?Math.round(r.codeval).toLocaleString():'free')+'</td>'},
-  {k:'where',t:'Where to buy',v:'psra',cell:r=>'<td>'+(r.sub?'<a href="'+esc(r.url)+'" target="_blank" rel="noopener">Monthly plan</a>':r.where==='OpenRouter'?'OpenRouter':'<span class="tag direct">Maker only</span>')+'</td>'}
+  {k:'where',t:'Where to buy',v:'psra',cell:r=>'<td>'+(r.isImg?'Maker or host API':r.sub?'<a href="'+esc(r.url)+'" target="_blank" rel="noopener">Monthly plan</a>':r.where==='OpenRouter'?'OpenRouter':'<span class="tag direct">Maker only</span>')+'</td>'}
 ];
 const PLANCOL={k:'plan',t:'Monthly plan',num:1,v:'psra',src:'Cheapest paid plan, subscription tools',s:'lower is better',cell:r=>'<td class="num">'+(r.sub?(r.plan!=null?'$'+r.plan.toFixed(2)+'/mo':NA):NA)+'</td>'};
 const NOTESCOL={k:'notes',t:'About this tool',v:'psra',src:'Subscription tools',s:'',cell:r=>'<td class="notes">'+(r.sub?'<b>'+esc(r.kind)+'</b> · free plan: '+(r.freePlan?'yes':'no')+' · developer API: '+(r.api?'yes':'no')+'<br>'+esc(r.note):'')+'</td>'};
 const FITCOL={k:'fit',t:'Project fit',num:1,v:'psra',cell:r=>{const P=proj();if(r.sub)return '<td class="num fit"><span class="tier t3">Subscription</span>'+(r.plan!=null?'$'+r.plan.toFixed(2)+'/mo':'')+'</td>';const tl=['','Top tier','Strong','Fair'][r._tier]||'';
-  const sc=P&&P.priceOnly?(r.pimg!=null?fmt$(r.pimg)+' per 1M':NA):(r._score==null?NA:r._score.toFixed(1));
+  const sc=P&&P.img?((r.elo!=null?'Elo '+r.elo:NA)+(r.pImg!=null?' · $'+r.pImg.toFixed(3)+'/image':'')):(r._score==null?NA:r._score.toFixed(1));
   return '<td class="num fit"><span class="tier t'+r._tier+'">'+tl+'</span>'+sc+'</td>'}};
 function proj(){return PROJECTS.find(p=>p.id===state.proj)}
 const VIEWS=[{id:'p',t:'Cost'},{id:'s',t:'Scores'},{id:'r',t:'Reliability'},{id:'a',t:'Everything'}];
@@ -299,15 +301,16 @@ const PROJECTS=[
   {id:'sheets',t:'Spreadsheets and data',src:'Data analysis (AA-AnalystAgent) + long-context + coding',note:'For reports, trackers, and number crunching. Ranked by the average of data-analysis, long-context, and coding scores (at least 2), then cheapest first.',score:r=>avg([r.analyst,r.lcr,r.code],2)},
   {id:'agents',t:'Agents and automations',src:'Coding + tool use + low hallucination + long-context',note:'For scheduled tasks and n8n-style automations that run on their own. Ranked by the average of those four scores (at least 3), then cheapest first.',score:r=>avg([r.code,r.tool,r.honest,r.lcr],3)},
   {id:'docs',t:'Long documents and PDFs',src:'Long-context accuracy (AA-LCR)',note:'For reading contracts, statements, and long reports. Ranked by long-context accuracy, then cheapest first.',score:r=>r.lcr},
-  {id:'image',priceOnly:true,t:'Image generation',src:'Image output price',note:'No independent quality score for image models is in this data yet, so these are ranked by image price only, cheapest first. Price is per 1 million image tokens; one image is usually about 1,000 to 1,300 tokens.',need:r=>has(r,'outm','image'),score:()=>0,price:r=>r.pimg},
-  {id:'design',priceOnly:true,t:'Graphics and design',src:'Image output price',note:'For logos, social graphics, flyers, and product mockups. Per-token image models are ranked by price only, because no quality score is in this data yet. Turn on Show subscription-only tools to add design-focused apps such as Canva, Adobe Firefly, and Ideogram.',need:r=>has(r,'outm','image'),score:()=>0,price:r=>r.pimg},
+  {id:'image',img:true,t:'Image generation',src:'Image quality (AA Image Arena Elo)',note:'Ranked by image quality from blind votes, where people pick the better of two images (Artificial Analysis Image Arena), then cheapest per image within each tier. Models marked Free to download can run free on your own computer with ComfyUI.',need:r=>r.isImg||has(r,'outm','image'),score:r=>r.elo,price:r=>r.pImg},
+  {id:'design',img:true,t:'Graphics and design',src:'Image quality (AA Image Arena Elo)',note:'For logos, social graphics, flyers, and product mockups. Ranked by overall image quality from blind votes, then cheapest per image within each tier. Turn on Show subscription-only tools to add design apps such as Canva, Adobe Firefly, and Ideogram (best at text in images).',need:r=>r.isImg||has(r,'outm','image'),score:r=>r.elo,price:r=>r.pImg},
+  {id:'art',img:true,t:'Art',src:'Image quality (AA Image Arena Elo)',note:'For illustrations, paintings, and artistic images. Ranked by overall image quality from blind votes, then cheapest per image; no test scores art styles separately yet. Turn on Show subscription-only tools to add art apps such as Midjourney and Krea. Models marked Free to download can run free on your own computer with ComfyUI.',need:r=>r.isImg||has(r,'outm','image'),score:r=>r.elo,price:r=>r.pImg},
   {id:'video',t:'Video editing',src:'Smarts, models that can watch video',note:'These models can watch video to plan edits, write scripts, and find clips. None of them edit video files; video editing tools charge per minute, not per token, so they aren\'t in this list. Ranked by smarts, then cheapest first.',need:r=>has(r,'inm','video'),score:r=>r.ii}
 ];
 const $=id=>document.getElementById(id);
 let rows=[],state=fresh(),goal='value';
 function fresh(){return {q:'',prov:'',minctx:0,maxin:'',maxout:'',mincode:'',mingpqa:'',minrel:'',where:'',scored:false,textonly:true,freeonly:false,view:'s',proj:'',subs:false,sort:['ii','desc']}}
 function fmtB(n){return n>=1000?(n/1000).toFixed(n%1000?1:0)+'T':(n%1?n.toFixed(1):n)+'B'}
-function cols(){const c=COLS.slice();if(state.subs){const w=c.findIndex(x=>x.k==='where');c.splice(w,0,PLANCOL,NOTESCOL)}if(!proj())return c;const P=proj();const f=Object.assign({},FITCOL,{src:P.src,s:P.priceOnly?'lower is better':'top tier first, then cheapest'});const i=c.findIndex(x=>x.k==='model');c.splice(i+1,0,f);return c}
+function cols(){const c=COLS.slice();if(state.subs){const w=c.findIndex(x=>x.k==='where');c.splice(w,0,PLANCOL,NOTESCOL)}if(!proj())return c;const P=proj();const f=Object.assign({},FITCOL,{src:P.src,s:P.img?'top tier first, then cheapest per image':'top tier first, then cheapest'});const i=c.findIndex(x=>x.k==='model');c.splice(i+1,0,f);return c}
 function save(){try{localStorage.setItem('mpf',JSON.stringify({state,goal}))}catch(e){}}
 function load(){try{const v=JSON.parse(localStorage.getItem('mpf')||'null');if(v&&v.state){state=Object.assign(fresh(),v.state);if(!'psra'.includes(state.view)||state.view.length!==1)state.view='s';goal=v.goal||''}}catch(e){}}
 
@@ -344,7 +347,7 @@ function filtered(){
   let out=rows.filter(r=>{
     if(q&&!(r.model+' '+r.prov+' '+r.id).toLowerCase().includes(q))return false;
     if(state.prov&&r.prov!==state.prov)return false;
-    if(r.sub){if(!state.subs)return false;const P=proj();if(!P)return true;if(P.id==='image')return /image/i.test(r.kind);if(P.id==='design')return /image/i.test(r.kind)&&/design|both/.test(r.best||'');if(P.id==='video')return /video/i.test(r.kind);return false}
+    if(r.sub){if(!state.subs)return false;const P=proj();if(!P)return true;if(P.id==='image')return /image/i.test(r.kind);if(P.id==='design')return /image/i.test(r.kind)&&/design|both/.test(r.best||'');if(P.id==='art')return /image/i.test(r.kind)&&/art|both/.test(r.best||'');if(P.id==='video')return /video/i.test(r.kind);return false}
     if(state.minctx&&(r.ctx||0)<state.minctx)return false;
     if(maxin!=null&&(r.pin==null||r.pin>maxin))return false;
     if(maxout!=null&&(r.pout==null||r.pout>maxout))return false;
@@ -355,14 +358,15 @@ function filtered(){
     if(state.scored&&r.ii==null&&r.code==null&&!proj())return false;
     const P=proj();
     if(P&&P.need&&!P.need(r))return false;
-    if(P&&!P.priceOnly&&P.score(r)==null)return false;
-    if(state.textonly&&r.media&&!(P&&P.priceOnly))return false;
+    if(r.isImg&&!(P&&P.img))return false;
+    if(P&&!P.img&&P.score(r)==null)return false;
+    if(state.textonly&&r.media&&!(P&&P.img))return false;
     if(state.freeonly&&!(r.free||r.blend===0))return false;
     return true;
   });
   const P=proj();
   if(P){const ts=P.tierScore||P.score;let mx=0;for(const r of out){if(r.sub)continue;r._score=P.score(r);r._t=ts(r);if(r._t!=null&&r._t>mx)mx=r._t}
-    for(const r of out){if(r.sub){r._tier=4;r._price=r.plan;continue}r._tier=P.priceOnly?1:(r._t==null?3:r._t>=mx*0.9?1:r._t>=mx*0.75?2:3);r._price=(P.price||(x=>x.blend))(r)}
+    for(const r of out){if(r.sub){r._tier=4;r._price=r.plan;continue}r._tier=r._t==null?3:P.img?(mx-r._t<=60?1:mx-r._t<=120?2:3):(r._t>=mx*0.9?1:r._t>=mx*0.75?2:3);r._price=(P.price||(x=>x.blend))(r)}
     if(state.sort[0]==='fit'){out.sort((a,b)=>a._tier-b._tier||((a._price??1e9)-(b._price??1e9))||((b._score||0)-(a._score||0)));return out}}
   const [k,dir]=state.sort,sgn=dir==='asc'?1:-1;
   out.sort((a,b)=>{let x=a[k],y=b[k];
@@ -380,6 +384,10 @@ function head(){
 }
 
 let HELP=null,NOTE=null;
+function addImages(id){if(!id||!id.models)return;const byName={};for(const r of rows)if(!r.sub)byName[r.model]=r;
+  for(const m of id.models){if(m.elo<850&&!/202[5-9]/.test(m.released))continue;const ex=byName[m.name];
+    if(ex){ex.elo=m.elo;ex.pImg=m.p1k!=null?m.p1k/1000:null;continue}
+    rows.push({prov:m.maker,model:m.name,id:'Released '+m.released,isImg:true,elo:m.elo,pImg:m.p1k!=null?m.p1k/1000:null,open:m.open,where:'Image API',blend:null,media:true})}}
 function renderNotable(){if(!NOTE)return;$('notetitle').textContent='New and notable money savers · '+(NOTE.week||'');
   $('notegrid').innerHTML=(NOTE.picks||[]).map(t=>'<div class="help"><a class="hn" href="'+esc(t.url)+'" target="_blank" rel="noopener">'+esc(t.name)+'</a><span class="hu">Used for: '+esc(t.use)+'</span><span class="hi">Replaces '+esc(t.replaces)+(t.paid?' ('+esc(t.paid)+')':'')+'</span><span class="hd">'+esc(t.what)+'</span><span class="hc">Free · '+esc(t.license)+' · '+esc(t.stars)+'</span><span class="hf">Found on: '+(t.found_url?'<a href="'+esc(t.found_url)+'" target="_blank" rel="noopener">'+esc(t.found_on||'source')+'</a>':esc(t.found_on||''))+'</span><span class="tagrow"><span class="hs">'+esc(t.setup)+'</span>'+(t.early?'<span class="hs early">Early stage</span>':'')+'</span></div>').join('')}
 function renderHelpers(){if(!HELP)return;const P=proj();const names=(P&&HELP.projects[P.id])||HELP.projects.all||[];
@@ -395,9 +403,9 @@ function render(){renderHelpers();renderNotable();
   const p1=list[0],p2=best(pool.filter(r=>r.blend>0),r=>r.blend,true),p3=state.sort[0]==='rel'?null:best(pool,r=>r.code),p4=best(list,r=>r.ctx),p5=state.sort[0]==='rel'?best(pool,r=>r.rel):null;
   const card=(cls,k,r,extra)=>r?'<div class="pick'+cls+'"><span class="k">'+k+'</span><span class="n">'+esc(r.model)+'</span><span class="d">'+esc(r.prov)+' · '+extra(r)+'</span></div>':'';
   const P=proj();
-  if(P&&list.length){const pr=r=>P.priceOnly?(r.pimg!=null?fmt$(r.pimg)+' per 1M image tokens':'price not listed'):typ(r);
-    const hi=P.priceOnly?null:best(list,r=>r._score),cheap=best(list.filter(r=>r._tier<=2&&(r._price||0)>0),r=>r._price,true);
-    const line=r=>[P.priceOnly?'':['','Top tier','Strong','Fair'][r._tier],!P.priceOnly&&r._score!=null?'score '+r._score.toFixed(1):'',pr(r)].filter(Boolean).join(' · ');
+  if(P&&list.length){const pr=r=>P.img?(r.pImg!=null?'$'+r.pImg.toFixed(3)+' per image':r.isImg?'no API (download or app only)':r.pimg!=null?fmt$(r.pimg)+' per 1M image tokens':'price not listed'):typ(r);
+    const hi=best(list,r=>r._score),cheap=best(list.filter(r=>r._tier<=2&&(r._price||0)>0),r=>r._price,true);
+    const line=r=>[['','Top tier','Strong','Fair','Subscription'][r._tier],r._score!=null?(P.img?'Elo '+r._score:'score '+r._score.toFixed(1)):'',pr(r)].filter(Boolean).join(' · ');
     $('picks').innerHTML=[card(' top','Best pick for '+P.t.toLowerCase(),list[0],line),
       card('','Highest score for this project',hi,line),
       card('','Cheapest paid model that does it well',cheap,line)].join('');
@@ -441,9 +449,9 @@ $('subs').addEventListener('change',()=>{state.subs=$('subs').checked;syncInputs
 $('reset').addEventListener('click',()=>{state=fresh();goal='all';syncInputs();render()});
 
 load();
-Promise.all([fetch('models.json',{cache:'no-store'}).then(r=>{if(!r.ok)throw new Error(r.status);return r.json()}),fetch('subs.json',{cache:'no-store'}).then(r=>r.ok?r.json():null).catch(()=>null),fetch('tools.json',{cache:'no-store'}).then(r=>r.ok?r.json():null).catch(()=>null),fetch('notable.json',{cache:'no-store'}).then(r=>r.ok?r.json():null).catch(()=>null)]).then(([d,sd,td,nd])=>{
+Promise.all([fetch('models.json',{cache:'no-store'}).then(r=>{if(!r.ok)throw new Error(r.status);return r.json()}),fetch('subs.json',{cache:'no-store'}).then(r=>r.ok?r.json():null).catch(()=>null),fetch('tools.json',{cache:'no-store'}).then(r=>r.ok?r.json():null).catch(()=>null),fetch('notable.json',{cache:'no-store'}).then(r=>r.ok?r.json():null).catch(()=>null),fetch('images.json',{cache:'no-store'}).then(r=>r.ok?r.json():null).catch(()=>null)]).then(([d,sd,td,nd,id])=>{
   HELP=td;NOTE=nd;
-  prep(d,sd);if(goal&&GOALS.find(g=>g.id===goal)){const keep=state.textonly;state=fresh();state.textonly=keep;GOALS.find(g=>g.id===goal).apply(state)}
+  prep(d,sd);addImages(id);if(goal&&GOALS.find(g=>g.id===goal)){const keep=state.textonly;state=fresh();state.textonly=keep;GOALS.find(g=>g.id===goal).apply(state)}
   syncInputs();render();
 }).catch(err=>{$('body').innerHTML='<tr><td class="empty" colspan="12">The model list did not load ('+esc(err.message)+'). Reload the page to try again.</td></tr>';$('stamp').textContent='Data not loaded'});
 })();
