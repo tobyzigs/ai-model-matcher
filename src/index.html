@@ -260,7 +260,7 @@ const avg=(a,min)=>{const v=a.filter(x=>x!=null);return v.length>=min?v.reduce((
 const has=(r,k,m)=>(r[k]||[]).includes(m);
 // Each project: score = what it is good at for this job; ranking = top tier first, then cheapest.
 const PROJECTS=[
-  {id:'webcode',t:'Website coding',src:'Coding (Terminal-Bench + SciCode)',note:'Ranked by coding score, then cheapest first within each tier. Use for building pages, plugins, scripts, and fixing site bugs.',score:r=>r.code},
+  {id:'webcode',t:'Coding',src:'Coding (Terminal-Bench + SciCode)',note:'Ranked by coding score, then cheapest first within each tier. Use for websites, plugins, scripts, automations, and fixing bugs.',score:r=>r.code},
   {id:'webdesign',t:'Website design',src:'Coding + reading images (MMMU-Pro)',note:'Needs a model that can see screenshots and mockups and write the code. Ranked by the average of coding and image understanding, then cheapest first.',need:r=>has(r,'inm','image'),score:r=>avg([r.code,r.vis],2)},
   {id:'basic',t:'Quick, simple questions',src:'Smarts (AA Intelligence Index)',note:'Everyday questions don\'t need the smartest model. Any model with a smarts score of 25 or more counts as top tier, so the cheapest capable models rise to the top.',score:r=>r.ii,tierScore:r=>r.ii==null?null:Math.min(r.ii,25)},
   {id:'complex',t:'Deep thinking and strategy',src:'Smarts (AA Intelligence Index)',note:'For hard reasoning, planning, and strategy. Ranked by smarts, then cheapest first within each tier.',score:r=>r.ii},
