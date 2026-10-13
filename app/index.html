@@ -118,6 +118,8 @@ td.fit{white-space:nowrap}
 .help .hn:hover{text-decoration:underline}
 .help .hu{font-size:13px;font-weight:600;color:var(--ink)}
 .help .hd{font-size:13.5px;color:var(--muted)}
+.help .hf{font-size:12.5px;color:var(--muted)}
+.help .hf a{color:var(--accent)}
 .help .tagrow{display:flex;flex-wrap:wrap;gap:6px}
 .help .early{background:var(--pick-soft);color:var(--pick)}
 .help .hc{font-family:var(--f-mono);font-size:12.5px;color:var(--ink)}
@@ -396,7 +398,7 @@ function head(){
 
 let HELP=null,NOTE=null;
 function renderNotable(){if(!NOTE)return;$('notetitle').textContent='New and notable money savers · '+(NOTE.week||'');
-  $('notegrid').innerHTML=(NOTE.picks||[]).map(t=>'<div class="help"><a class="hn" href="'+esc(t.url)+'" target="_blank" rel="noopener">'+esc(t.name)+'</a><span class="hu">Used for: '+esc(t.use)+'</span><span class="hi">Replaces '+esc(t.replaces)+(t.paid?' ('+esc(t.paid)+')':'')+'</span><span class="hd">'+esc(t.what)+'</span><span class="hc">Free · '+esc(t.license)+' · '+esc(t.stars)+'</span><span class="tagrow"><span class="hs">'+esc(t.setup)+'</span>'+(t.early?'<span class="hs early">Early stage</span>':'')+'</span></div>').join('')}
+  $('notegrid').innerHTML=(NOTE.picks||[]).map(t=>'<div class="help"><a class="hn" href="'+esc(t.url)+'" target="_blank" rel="noopener">'+esc(t.name)+'</a><span class="hu">Used for: '+esc(t.use)+'</span><span class="hi">Replaces '+esc(t.replaces)+(t.paid?' ('+esc(t.paid)+')':'')+'</span><span class="hd">'+esc(t.what)+'</span><span class="hc">Free · '+esc(t.license)+' · '+esc(t.stars)+'</span><span class="hf">Found on: '+(t.found_url?'<a href="'+esc(t.found_url)+'" target="_blank" rel="noopener">'+esc(t.found_on||'source')+'</a>':esc(t.found_on||''))+'</span><span class="tagrow"><span class="hs">'+esc(t.setup)+'</span>'+(t.early?'<span class="hs early">Early stage</span>':'')+'</span></div>').join('')}
 function renderHelpers(){if(!HELP)return;const P=proj();const names=(P&&HELP.projects[P.id])||HELP.projects.all||[];
   $('helptitle').textContent='Helpful tools for '+(P?P.t.toLowerCase():'any project');
   $('helpgrid').innerHTML=names.map(n=>{const t=HELP.tools[n];if(!t)return '';return '<div class="help"><a class="hn" href="'+esc(t.url)+'" target="_blank" rel="noopener">'+esc(n)+'</a>'+(t.use?'<span class="hu">Used for: '+esc(t.use)+'</span>':'')+'<span class="hd">'+esc(t.does)+'</span><span class="hc">'+esc(t.cost)+'</span>'+(t.instead?'<span class="hi">'+esc(t.instead)+'</span>':'')+'<span class="hs">'+esc(t.setup)+'</span></div>'}).join('')}
