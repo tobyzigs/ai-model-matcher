@@ -1,17 +1,180 @@
-{"updated":"2026-10-13","tools":[
-{"tool":"Midjourney","maker":"Midjourney","kind":"Image","latest":"V8.2","price":10,"free":false,"api":false,"url":"https://docs.midjourney.com/hc/en-us/articles/27870484040333-Comparing-Midjourney-Plans","note":"Top artistic image quality. No official API; use the website or Discord."},
-{"tool":"Adobe Firefly","maker":"Adobe","kind":"Image + video","latest":null,"price":9.99,"free":true,"api":false,"url":"https://www.adobe.com/products/firefly/plans.html","note":"Commercially safe images. Plans include partner models such as Kling, Veo, and Nano Banana. API is enterprise only."},
-{"tool":"Ideogram","maker":"Ideogram AI","kind":"Image","latest":"Ideogram 4.5","price":20,"free":true,"api":true,"url":"https://ideogram.ai/pricing","note":"Best for accurate text and lettering inside images."},
-{"tool":"Leonardo.ai","maker":"Leonardo.Ai (Canva)","kind":"Image + video","latest":null,"price":12,"free":true,"api":true,"url":"https://leonardo.ai/pricing/","note":"Free plan gives 150 tokens a day."},
-{"tool":"Krea","maker":"Krea AI","kind":"Image + video","latest":"Krea 2","price":35,"free":true,"api":true,"url":"https://www.krea.ai/pricing","note":"Real-time generation and many models in one place. $21 a month if billed yearly."},
-{"tool":"Canva AI (Magic Media)","maker":"Canva","kind":"Image + video","latest":null,"price":18,"free":true,"api":false,"url":"https://www.canva.com/pricing/","note":"AI inside a design editor. Pro caps AI use; price from a third-party check ($144 a year on Canva's page)."},
-{"tool":"Runway","maker":"Runway AI","kind":"Image + video","latest":"Gen-4.5","price":15,"free":true,"api":true,"url":"https://runway.com/pricing","note":"Pro-grade video generation and editing. Free plan is a one-time 125 credits."},
-{"tool":"Pika","maker":"Pika Labs","kind":"Video","latest":"Pika 2.5","price":10,"free":true,"api":true,"url":"https://pika.art/pricing","note":"Fun effects for short social videos. Free plan has no commercial use."},
-{"tool":"Luma Dream Machine","maker":"Luma AI","kind":"Image + video","latest":"Ray3.2","price":30,"free":false,"api":true,"url":"https://lumalabs.ai/pricing","note":"Cinematic video."},
-{"tool":"Kling AI","maker":"Kuaishou","kind":"Image + video","latest":"Kling 4.0","price":8.8,"free":true,"api":true,"url":"https://kling.ai/membership/membership-plan","note":"Realistic motion with sound. Free output isn't for commercial use. Price from a third-party check."},
-{"tool":"Google Flow (Veo)","maker":"Google","kind":"Image + video","latest":"Veo 3.1","price":4.99,"free":true,"api":true,"url":"https://gemini.google/subscriptions/","note":"Comes with Google AI plans. $4.99 plan gets 200 Flow credits; full Veo 3.1 needs the top plan."},
-{"tool":"Descript","maker":"Descript","kind":"Video editing","latest":null,"price":24,"free":true,"api":false,"url":"https://www.descript.com/pricing","note":"Edit video by editing the transcript. Includes an AI editing assistant."},
-{"tool":"CapCut","maker":"ByteDance","kind":"Video editing","latest":null,"price":19.99,"free":true,"api":false,"url":"https://www.capcut.com/pricing","note":"Easy social video editor. Pro adds AI features and video generation credits."},
-{"tool":"Higgsfield","maker":"Higgsfield AI","kind":"Image + video","latest":"Soul 2.0","price":19,"free":true,"api":true,"url":"https://higgsfield.ai/pricing","note":"One hub for Kling, Veo, Seedance, and Nano Banana. Starter plan limits which models you get."},
-{"tool":"Magnific (formerly Freepik AI)","maker":"Freepik Company","kind":"Image + video","latest":"Magnific One","price":20,"free":false,"api":true,"url":"https://www.magnific.com/pricing","note":"Many image and video models plus stock images. Higher plan has unlimited generations."}
-]}
+{
+"updated": "2026-10-13",
+"tools": [
+{
+"tool": "Midjourney",
+"maker": "Midjourney",
+"kind": "Image",
+"latest": "V8.2",
+"price": 10,
+"free": false,
+"api": false,
+"url": "https://docs.midjourney.com/hc/en-us/articles/27870484040333-Comparing-Midjourney-Plans",
+"note": "Top artistic image quality. No official API; use the website or Discord.",
+"best": "art"
+},
+{
+"tool": "Adobe Firefly",
+"maker": "Adobe",
+"kind": "Image + video",
+"latest": null,
+"price": 9.99,
+"free": true,
+"api": false,
+"url": "https://www.adobe.com/products/firefly/plans.html",
+"note": "Commercially safe images. Plans include partner models such as Kling, Veo, and Nano Banana. API is enterprise only.",
+"best": "design"
+},
+{
+"tool": "Ideogram",
+"maker": "Ideogram AI",
+"kind": "Image",
+"latest": "Ideogram 4.5",
+"price": 20,
+"free": true,
+"api": true,
+"url": "https://ideogram.ai/pricing",
+"note": "Best for accurate text and lettering inside images.",
+"best": "design"
+},
+{
+"tool": "Leonardo.ai",
+"maker": "Leonardo.Ai (Canva)",
+"kind": "Image + video",
+"latest": null,
+"price": 12,
+"free": true,
+"api": true,
+"url": "https://leonardo.ai/pricing/",
+"note": "Free plan gives 150 tokens a day.",
+"best": "both"
+},
+{
+"tool": "Krea",
+"maker": "Krea AI",
+"kind": "Image + video",
+"latest": "Krea 2",
+"price": 35,
+"free": true,
+"api": true,
+"url": "https://www.krea.ai/pricing",
+"note": "Real-time generation and many models in one place. $21 a month if billed yearly.",
+"best": "art"
+},
+{
+"tool": "Canva AI (Magic Media)",
+"maker": "Canva",
+"kind": "Image + video",
+"latest": null,
+"price": 18,
+"free": true,
+"api": false,
+"url": "https://www.canva.com/pricing/",
+"note": "AI inside a design editor. Pro caps AI use; price from a third-party check ($144 a year on Canva's page).",
+"best": "design"
+},
+{
+"tool": "Runway",
+"maker": "Runway AI",
+"kind": "Image + video",
+"latest": "Gen-4.5",
+"price": 15,
+"free": true,
+"api": true,
+"url": "https://runway.com/pricing",
+"note": "Pro-grade video generation and editing. Free plan is a one-time 125 credits."
+},
+{
+"tool": "Pika",
+"maker": "Pika Labs",
+"kind": "Video",
+"latest": "Pika 2.5",
+"price": 10,
+"free": true,
+"api": true,
+"url": "https://pika.art/pricing",
+"note": "Fun effects for short social videos. Free plan has no commercial use."
+},
+{
+"tool": "Luma Dream Machine",
+"maker": "Luma AI",
+"kind": "Image + video",
+"latest": "Ray3.2",
+"price": 30,
+"free": false,
+"api": true,
+"url": "https://lumalabs.ai/pricing",
+"note": "Cinematic video."
+},
+{
+"tool": "Kling AI",
+"maker": "Kuaishou",
+"kind": "Image + video",
+"latest": "Kling 4.0",
+"price": 8.8,
+"free": true,
+"api": true,
+"url": "https://kling.ai/membership/membership-plan",
+"note": "Realistic motion with sound. Free output isn't for commercial use. Price from a third-party check.",
+"best": "art"
+},
+{
+"tool": "Google Flow (Veo)",
+"maker": "Google",
+"kind": "Image + video",
+"latest": "Veo 3.1",
+"price": 4.99,
+"free": true,
+"api": true,
+"url": "https://gemini.google/subscriptions/",
+"note": "Comes with Google AI plans. $4.99 plan gets 200 Flow credits; full Veo 3.1 needs the top plan.",
+"best": "art"
+},
+{
+"tool": "Descript",
+"maker": "Descript",
+"kind": "Video editing",
+"latest": null,
+"price": 24,
+"free": true,
+"api": false,
+"url": "https://www.descript.com/pricing",
+"note": "Edit video by editing the transcript. Includes an AI editing assistant."
+},
+{
+"tool": "CapCut",
+"maker": "ByteDance",
+"kind": "Video editing",
+"latest": null,
+"price": 19.99,
+"free": true,
+"api": false,
+"url": "https://www.capcut.com/pricing",
+"note": "Easy social video editor. Pro adds AI features and video generation credits."
+},
+{
+"tool": "Higgsfield",
+"maker": "Higgsfield AI",
+"kind": "Image + video",
+"latest": "Soul 2.0",
+"price": 19,
+"free": true,
+"api": true,
+"url": "https://higgsfield.ai/pricing",
+"note": "One hub for Kling, Veo, Seedance, and Nano Banana. Starter plan limits which models you get.",
+"best": "art"
+},
+{
+"tool": "Magnific (formerly Freepik AI)",
+"maker": "Freepik Company",
+"kind": "Image + video",
+"latest": "Magnific One",
+"price": 20,
+"free": false,
+"api": true,
+"url": "https://www.magnific.com/pricing",
+"note": "Many image and video models plus stock images. Higher plan has unlimited generations.",
+"best": "both"
+}
+]
+}
