@@ -259,6 +259,20 @@
 "setup": "Easy",
 "instead": null,
 "url": "https://mailchimp.com/pricing/marketing/"
+},
+"PostHog": {
+"does": "Shows how shoppers move through your site: clicks, drop-offs, session replays, and A/B tests.",
+"cost": "Free 1M events and 5,000 replays/mo; then pay per use",
+"setup": "Some setup",
+"instead": null,
+"url": "https://posthog.com/pricing"
+},
+"Microsoft Clarity": {
+"does": "Free heatmaps and session recordings of real visitors.",
+"cost": "Free",
+"setup": "Easy",
+"instead": "Instead of paid heatmap tools",
+"url": "https://clarity.microsoft.com/"
 }
 },
 "projects": {
@@ -275,11 +289,12 @@
 "Cursor"
 ],
 "webdesign": [
+"PostHog",
+"Microsoft Clarity",
+"Google Analytics 4",
 "Figma",
 "Canva Pro",
-"Netlify",
-"Cloudflare Pages",
-"Photopea"
+"Netlify"
 ],
 "basic": [
 "OpenRouter",
