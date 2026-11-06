@@ -1,5 +1,5 @@
 {
-"updated": "2026-10-13",
+"updated": "2026-11-05",
 "tools": {
 "OpenRouter": {
 "does": "One account and one bill for hundreds of AI models, including most models in this list.",
@@ -27,7 +27,7 @@
 },
 "Cloudflare Pages": {
 "does": "Free website hosting with unlimited sites and bandwidth.",
-"cost": "Free plan; Pro $20/mo",
+"cost": "Free plan; Pro $25/mo ($20/mo billed yearly)",
 "setup": "Some setup",
 "instead": "Instead of paid web hosting",
 "url": "https://pages.cloudflare.com/",
@@ -259,7 +259,7 @@
 },
 "DaVinci Resolve": {
 "does": "Professional video editor with a strong free version.",
-"cost": "Free; Studio $295 one-time",
+"cost": "Free; Studio $236 one-time (sale price; was $295)",
 "setup": "Some setup",
 "instead": "Instead of Premiere Pro",
 "url": "https://www.blackmagicdesign.com/products/davinciresolve",

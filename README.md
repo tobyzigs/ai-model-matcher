@@ -17,4 +17,4 @@ A weekly Claude scheduled task ("AI Model Matcher weekly update") refreshes the 
 - `app/`: the published site (page, data, icons, install files).
 - `src/index.html`: the page source, also published as a Claude artifact.
 - `scripts/make_app.py src/index.html app/index.html`: builds the installable page from the source.
-- `scripts/build.py`: builds the model data.
+- `scripts/build.py`: builds the model data. Since November 2026 the Artificial Analysis feed sends only Intelligence Index v5 (and no per-test results), so the script keeps each model's last published per-test score from `app/models.json` and never carries Smarts forward.

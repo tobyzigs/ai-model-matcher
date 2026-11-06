@@ -1,5 +1,5 @@
 {
-"updated": "2026-10-13",
+"updated": "2026-11-05",
 "tools": [
 {
 "tool": "Midjourney",
@@ -53,12 +53,12 @@
 "tool": "Krea",
 "maker": "Krea AI",
 "kind": "Image + video",
-"latest": "Krea 2",
-"price": 35,
+"latest": "Krea 3",
+"price": 9,
 "free": true,
 "api": true,
 "url": "https://www.krea.ai/pricing",
-"note": "Real-time generation and many models in one place. $21 a month if billed yearly.",
+"note": "Real-time generation and many models in one place. $5 a month if billed yearly.",
 "best": "art"
 },
 {

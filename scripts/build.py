@@ -1,7 +1,7 @@
 import json,re,sys,datetime
 orm=json.load(open('data/or.json')); aa=json.load(open('data/aa.json'))
 CREATOR_FIX={'SpaceXAI':'xAI','Kimi':'Moonshot AI','Alibaba':'Qwen (Alibaba)','Z AI':'Z.ai'}
-OR_PROV={'aion-labs':'AION Labs','amazon':'Amazon','anthracite-org':'Anthracite','anthropic':'Anthropic','apodex':'Apodex','arcee-ai':'Arcee AI','bytedance':'ByteDance','bytedance-seed':'ByteDance Seed','cognitivecomputations':'Cognitive Computations','cohere':'Cohere','deepseek':'DeepSeek','dots-studio':'Dots Studio','fireworks':'Fireworks','google':'Google','gryphe':'Gryphe','ibm-granite':'IBM','inception':'Inception','inclusionai':'InclusionAI','inference-net':'Inference.net','liquid':'Liquid AI','mancer':'Mancer','meituan':'Meituan (LongCat)','meta':'Meta','meta-llama':'Meta','microsoft':'Microsoft','minimax':'MiniMax','mistralai':'Mistral','moonshotai':'Moonshot AI','morph':'Morph','nex-agi':'Nex AGI','nousresearch':'Nous Research','nvidia':'NVIDIA','openai':'OpenAI','perceptron':'Perceptron','perplexity':'Perplexity','poolside':'Poolside','prism-ml':'Prism','qwen':'Qwen (Alibaba)','rekaai':'Reka AI','relace':'Relace','sakana':'Sakana AI','sao10k':'Sao10K','scaledown':'ScaleDown','stepfun':'StepFun','tencent':'Tencent','thedrummer':'TheDrummer','thinkingmachines':'Thinking Machines','typesafe':'Typesafe','unbiased':'Unbiased','undi95':'Undi95','upstage':'Upstage','writer':'Writer','x-ai':'xAI','xiaomi':'Xiaomi','z-ai':'Z.ai'}
+OR_PROV={'aion-labs':'AION Labs','amazon':'Amazon','anthracite-org':'Anthracite','anthropic':'Anthropic','apodex':'Apodex','arcee-ai':'Arcee AI','bytedance':'ByteDance','bytedance-seed':'ByteDance Seed','cognitivecomputations':'Cognitive Computations','cohere':'Cohere','deepseek':'DeepSeek','dots-studio':'Dots Studio','fireworks':'Fireworks','google':'Google','gryphe':'Gryphe','ibm-granite':'IBM','inception':'Inception','inclusionai':'InclusionAI','inference-net':'Inference.net','liquid':'Liquid AI','mancer':'Mancer','meituan':'Meituan (LongCat)','meta':'Meta','meta-llama':'Meta','microsoft':'Microsoft','minimax':'MiniMax','mistralai':'Mistral','moonshotai':'Moonshot AI','morph':'Morph','nex-agi':'Nex AGI','nousresearch':'Nous Research','nvidia':'NVIDIA','openai':'OpenAI','perceptron':'Perceptron','perplexity':'Perplexity','poolside':'Poolside','prism-ml':'Prism','qwen':'Qwen (Alibaba)','rekaai':'Reka AI','relace':'Relace','sakana':'Sakana AI','sao10k':'Sao10K','scaledown':'ScaleDown','stepfun':'StepFun','tencent':'Tencent','thedrummer':'TheDrummer','thinkingmachines':'Thinking Machines','typesafe':'Typesafe','unbiased':'Unbiased','undi95':'Undi95','upstage':'Upstage','writer':'Writer','x-ai':'xAI','xingchen-agi':'Xingchen AGI','recursive':'Recursive','stealth':'Stealth (unnamed)','reflection':'Reflection','ricursiveai':'Ricursive AI','moondream':'Moondream','elorian':'Elorian','particle-ai':'Particle AI','xiaomi':'Xiaomi','z-ai':'Z.ai'}
 def norm(s): return re.sub(r'[^a-z0-9]+','-',s.lower()).strip('-')
 aa_by={r['slug']:r for r in aa}
 def pct(v): return None if v is None else round(v*100,1)
@@ -27,7 +27,7 @@ def params(*texts):
     act=float(a.group(1)) if a else None
     if tot<0.1 or tot>3000: return None,None
     return tot,act
-ALIAS={'anthropic/claude-haiku-4.5':'claude-4-5-haiku','anthropic/claude-sonnet-4.5':'claude-4-5-sonnet','anthropic/claude-opus-4.1':'claude-4-1-opus','anthropic/claude-sonnet-4':'claude-4-sonnet','anthropic/claude-opus-4':'claude-4-opus','z-ai/glm-4.5':'glm-4.5','deepseek/deepseek-chat-v3.1':'deepseek-v3-1','deepseek/deepseek-v3.2-exp':'deepseek-v3-2-0925','deepseek/deepseek-chat':'deepseek-v3','deepseek/deepseek-chat-v3-0324':'deepseek-v3-0324','google/gemini-3.1-flash-lite':'gemini-3-1-flash-lite-preview','minimax/minimax-m1':'minimax-m1-80k','x-ai/grok-build-0.1':'grok-build-0-1-06-16'}
+ALIAS={'anthropic/claude-haiku-4.5':'claude-4-5-haiku','anthropic/claude-sonnet-4.5':'claude-4-5-sonnet','anthropic/claude-opus-4.1':'claude-4-1-opus','anthropic/claude-sonnet-4':'claude-4-sonnet','anthropic/claude-opus-4':'claude-4-opus','z-ai/glm-4.5':'glm-4.5','deepseek/deepseek-chat-v3.1':'deepseek-v3-1','deepseek/deepseek-v3.2-exp':'deepseek-v3-2-0925','deepseek/deepseek-chat':'deepseek-v3','deepseek/deepseek-chat-v3-0324':'deepseek-v3-0324','google/gemini-3.1-flash-lite':'gemini-3-1-flash-lite-preview','minimax/minimax-m1':'minimax-m1-80k','x-ai/grok-build-0.1':'grok-build-0-1-06-16','tencent/hy4':'tencent-hy4','reflection/beam-1.0-501b-a23b':'reflection-beam'}
 def find_aa(mid):
     k=mid.split(':')[0]
     if k in ALIAS and ALIAS[k] in aa_by: return aa_by[ALIAS[k]]
@@ -73,6 +73,23 @@ for r in sorted(aa,key=lambda r:-(r.get('intelligence_index') or 0)):
     rows.append(dict(prov=CREATOR_FIX.get(cr,cr),model=r['name'],id=r['slug'],ctx=r.get('context_window_tokens'),pin=pr.get('input'),pout=pr.get('output'),pcache=pr.get('cache_hit'),
         free=False,mod='',where='Direct from maker',created=None,**bench(r)))
     rows[-1]['pb'],rows[-1]['pa']=params(r['name'],r['slug'])
+# Carry forward per-test scores. In November 2026 the Artificial Analysis feed switched to
+# Intelligence Index v5 and stopped sending per-test results (coding, GPQA, AA-LCR, and so on).
+# Keep each model's last published per-test score when the feed has none. Smarts (ii) is never
+# carried forward, because v5 uses a different scale than the older index.
+import os
+CARRY=['code','gpqa','hle','honest','acc','vis','gdp','analyst','bank','lcr','tool','instr','size','pb','pa']
+if os.path.exists('app/models.json'):
+    prev={r['id']:r for r in json.load(open('app/models.json'))['rows']}
+    carried=0
+    for r in rows:
+        o=prev.get(r['id'])
+        if not o: continue
+        for k in CARRY:
+            if r.get(k) is None and o.get(k) is not None: r[k]=o[k]; carried+=1
+        core=[r.get('honest'),r.get('lcr'),r.get('code')]
+        r['rel']=round(sum(core)/3,1) if None not in core else None
+    print('carried forward',carried,'scores')
 meta={'updated':datetime.date.today().isoformat(),'or_count':len(orm),'aa_count':len(aa),'sources':{'pricing':'https://openrouter.ai/models','benchmarks':'https://artificialanalysis.ai/leaderboards/models'}}
 json.dump({'meta':meta,'rows':rows},open('models.json','w'),separators=(',',':'))
 print(len(rows),sum(1 for r in rows if r.get('ii') is not None),sum(1 for r in rows if r['where']!='OpenRouter'))
