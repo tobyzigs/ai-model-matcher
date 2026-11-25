@@ -8,7 +8,7 @@ A weekly Claude scheduled task ("AI Model Matcher weekly update") refreshes the 
 
 1. It downloads prices from the OpenRouter model list and scores from Artificial Analysis into `data/or.json` and `data/aa.json`.
 2. `python3 -I scripts/build.py` (run from the repo root) writes `models.json`, which is copied to `app/models.json`.
-3. It rechecks subscription tool prices in `app/subs.json` and helper tool prices in `app/tools.json`, and picks up to 10 new tools for `app/notable.json` (New and notable money savers).
+3. It rechecks subscription tool prices in `app/subs.json` and helper tool prices in `app/tools.json`, and picks up to 10 new tools for `app/notable.json` (New and notable money savers). It also saves the 10 repos that gained the most stars this week on GitHub's weekly trending page to `app/trending.json` (Trending on GitHub this week) and checks the file with `python3 -I scripts/check_trending.py`.
 4. It saves the Artificial Analysis image leaderboard to `data/img.md` and runs `python3 -I scripts/build_images.py` to refresh `app/images.json`.
 5. It commits and pushes. Netlify publishes each push.
 
@@ -17,4 +17,5 @@ A weekly Claude scheduled task ("AI Model Matcher weekly update") refreshes the 
 - `app/`: the published site (page, data, icons, install files).
 - `src/index.html`: the page source, also published as a Claude artifact.
 - `scripts/make_app.py src/index.html app/index.html`: builds the installable page from the source.
+- `scripts/check_trending.py`: checks `app/trending.json` (at most 10 repos, every field filled, links that go to github.com). The section stays hidden while the list is empty.
 - `scripts/build.py`: builds the model data. Since November 2026 the Artificial Analysis feed sends only Intelligence Index v5 (and no per-test results), so the script keeps each model's last published per-test score from `app/models.json` and never carries Smarts forward.
