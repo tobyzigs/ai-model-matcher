@@ -240,7 +240,7 @@ td.model .pv{display:none;font-size:11.5px;color:var(--muted)}
 
   <section class="panel helpers" aria-label="Trending on GitHub" id="trendpanel" hidden>
     <span class="label" id="trendtitle">Trending on GitHub this week</span>
-    <p class="goalnote">The 10 projects that gained the most GitHub stars this week, on any topic. Some are early experiments, so look before you install.</p>
+    <p class="goalnote">From GitHub's weekly Trending page: the 10 projects there that gained the most stars this week, on any topic. Some are early experiments, so look before you install.</p>
     <div class="helpgrid" id="trendgrid"></div>
   </section>
 
@@ -396,9 +396,15 @@ function addImages(id){if(!id||!id.models)return;const byName={};for(const r of 
     rows.push({prov:m.maker,model:m.name,id:'Released '+m.released,isImg:true,elo:m.elo,pImg:m.p1k!=null?m.p1k/1000:null,open:m.open,where:'Image API',blend:null,media:true})}}
 function renderNotable(){if(!NOTE)return;$('notetitle').textContent='New and notable money savers · '+(NOTE.week||'');
   $('notegrid').innerHTML=(NOTE.picks||[]).map(t=>'<div class="help"><a class="hn" href="'+esc(t.url)+'" target="_blank" rel="noopener">'+esc(t.name)+'</a><span class="hu">Used for: '+esc(t.use)+'</span><span class="hi">Replaces '+esc(t.replaces)+(t.paid?' ('+esc(t.paid)+')':'')+'</span><span class="hd">'+esc(t.what)+'</span><span class="hc">Free · '+esc(t.license)+' · '+esc(t.stars)+'</span><span class="hf">Found on: '+(t.found_url?'<a href="'+esc(t.found_url)+'" target="_blank" rel="noopener">'+esc(t.found_on||'source')+'</a>':esc(t.found_on||''))+'</span><span class="tagrow"><span class="hs">'+esc(t.setup)+'</span>'+(t.early?'<span class="hs early">Early stage</span>':'')+'</span></div>').join('')}
-function renderTrending(){const picks=(TREND&&TREND.repos)||[];$('trendpanel').hidden=!picks.length;if(!picks.length)return;
-  $('trendtitle').textContent='Trending on GitHub this week · '+(TREND.week||'');
-  $('trendgrid').innerHTML=picks.map((t,i)=>'<div class="help"><a class="hn" href="'+esc(t.url)+'" target="_blank" rel="noopener">'+(i+1)+'. '+esc(t.name)+'</a><span class="hd">'+esc(t.what)+'</span><span class="hc">'+esc(t.stars_week)+' this week · '+esc(t.stars)+' total</span><span class="hi">'+esc(t.language||'')+(t.license?' · '+esc(t.license):'')+'</span><span class="tagrow">'+(t.early?'<span class="hs early">Early stage</span>':'')+'</span></div>').join('')}
+// Trending on GitHub: the feed is optional, so a bad file only hides this section and never stops the rest of the page.
+function trendRepos(d){const NAME=/^[A-Za-z0-9_.-]+\/[A-Za-z0-9_.-]+$/;const str=v=>typeof v==='string'&&v.trim()!=='';
+  if(!d||typeof d!=='object'||!Array.isArray(d.repos))return [];
+  return d.repos.filter(t=>t&&typeof t==='object'&&str(t.name)&&NAME.test(t.name)&&t.url==='https://github.com/'+t.name&&str(t.what)&&str(t.stars_week)&&str(t.stars)&&Number.isFinite(t.stars_week_n))
+    .sort((a,b)=>b.stars_week_n-a.stars_week_n).slice(0,10)}
+function renderTrending(){try{const picks=trendRepos(TREND);$('trendpanel').hidden=!picks.length;if(!picks.length)return;
+  $('trendtitle').textContent='Trending on GitHub this week · '+(typeof TREND.week==='string'?TREND.week:'');
+  $('trendgrid').innerHTML=picks.map((t,i)=>'<div class="help"><a class="hn" href="https://github.com/'+esc(t.name)+'" target="_blank" rel="noopener">'+(i+1)+'. '+esc(t.name)+'</a><span class="hd">'+esc(t.what)+'</span><span class="hc">'+esc(t.stars_week)+' this week · '+esc(t.stars)+' total</span><span class="hi">'+esc(typeof t.language==='string'?t.language:'')+(typeof t.license==='string'&&t.license?' · '+esc(t.license):'')+'</span><span class="tagrow">'+(t.early===true?'<span class="hs early">Early stage</span>':'')+'</span></div>').join('')}
+  catch(e){$('trendpanel').hidden=true}}
 function renderHelpers(){if(!HELP)return;const P=proj();const names=(P&&HELP.projects[P.id])||HELP.projects.all||[];
   $('helptitle').textContent='Helpful tools for '+(P?P.t.toLowerCase():'any project');
   $('helpgrid').innerHTML=names.map(n=>{const t=HELP.tools[n];if(!t)return '';return '<div class="help"><a class="hn" href="'+esc(t.url)+'" target="_blank" rel="noopener">'+esc(n)+'</a>'+(t.use?'<span class="hu">Used for: '+esc(t.use)+'</span>':'')+'<span class="hd">'+esc(t.does)+'</span><span class="hc">'+esc(t.cost)+'</span>'+(t.instead?'<span class="hi">'+esc(t.instead)+'</span>':'')+'<span class="hs">'+esc(t.setup)+'</span></div>'}).join('')}

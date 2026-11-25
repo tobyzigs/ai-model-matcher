@@ -1,4 +1,6 @@
-# Checks app/trending.json (Trending on GitHub this week) before it is published.
+# Checks app/trending.json (Trending on GitHub this week) before it is published: at most 10
+# repos from GitHub's weekly Trending page, every field filled, github.com links only, ranked by
+# stars gained this week (stars_week_n), most first.
 # Usage: python3 -I scripts/check_trending.py [path]   (exit 0 = good; otherwise prints every problem)
 import json
 import re
@@ -42,6 +44,12 @@ def problems(doc):
             out.append(f'entry {i}: "what" is over 20 words')
         if "early" in r and not isinstance(r["early"], bool):
             out.append(f'entry {i}: "early" must be true or false')
+        n = r.get("stars_week_n")
+        if isinstance(n, bool) or not isinstance(n, int) or n < 0:
+            out.append(f'entry {i}: "stars_week_n" must be a whole number of stars gained this week')
+    gains = [r.get("stars_week_n") for r in repos if isinstance(r, dict)]
+    if all(isinstance(g, int) and not isinstance(g, bool) for g in gains) and gains != sorted(gains, reverse=True):
+        out.append('"repos" must be in order of stars gained this week, most first')
     return out
 
 
