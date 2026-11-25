@@ -1,5 +1,116 @@
 {
-"updated": "2026-11-25",
-"week": "Week of November 23, 2026",
-"repos": []
+ "updated": "2026-11-25",
+ "week": "Week of November 23, 2026",
+ "repos": [
+  {
+   "name": "mvanhorn/last30days-skill",
+   "what": "AI agent skill that researches any topic across Reddit, X, YouTube, Hacker News and the web, then sums it up.",
+   "language": "Python",
+   "license": "MIT",
+   "stars_week": "+5,369 stars",
+   "stars_week_n": 5369,
+   "stars": "75k",
+   "url": "https://github.com/mvanhorn/last30days-skill",
+   "early": false
+  },
+  {
+   "name": "dream-num/univer",
+   "what": "Open-source office toolkit for building spreadsheets, documents and slides into your own app, with AI agent support.",
+   "language": "TypeScript",
+   "license": "Apache-2.0",
+   "stars_week": "+3,278 stars",
+   "stars_week_n": 3278,
+   "stars": "31.8k",
+   "url": "https://github.com/dream-num/univer",
+   "early": false
+  },
+  {
+   "name": "kajisho5/ffmpeg-skill",
+   "what": "Local video editor for coding agents: cut, caption, reframe and export videos with FFmpeg, no cloud needed.",
+   "language": "Python",
+   "license": "MIT",
+   "stars_week": "+2,993 stars",
+   "stars_week_n": 2993,
+   "stars": "11.1k",
+   "url": "https://github.com/kajisho5/ffmpeg-skill",
+   "early": false
+  },
+  {
+   "name": "meta/astryx",
+   "what": "Meta's open-source design system you can fully customize, built to work with AI agents.",
+   "language": "TypeScript",
+   "license": "MIT",
+   "stars_week": "+2,890 stars",
+   "stars_week_n": 2890,
+   "stars": "33.1k",
+   "url": "https://github.com/meta/astryx",
+   "early": false
+  },
+  {
+   "name": "alibaba/open-code-review",
+   "what": "Alibaba's AI code review tool that leaves line-by-line comments and catches common bugs and security holes.",
+   "language": "Go",
+   "license": "Apache-2.0",
+   "stars_week": "+2,638 stars",
+   "stars_week_n": 2638,
+   "stars": "56.3k",
+   "url": "https://github.com/alibaba/open-code-review",
+   "early": false
+  },
+  {
+   "name": "google-labs-code/stitch-skills",
+   "what": "Google's library of agent skills for the Stitch design tool, for Claude Code, Gemini CLI and Cursor.",
+   "language": "TypeScript",
+   "license": "Apache-2.0",
+   "stars_week": "+2,626 stars",
+   "stars_week_n": 2626,
+   "stars": "13k",
+   "url": "https://github.com/google-labs-code/stitch-skills",
+   "early": false
+  },
+  {
+   "name": "GoogleChrome/modern-web-guidance-src",
+   "what": "Google Chrome team guidance that keeps coding agents current on modern web best practices.",
+   "language": "TypeScript",
+   "license": "Apache-2.0",
+   "stars_week": "+2,494 stars",
+   "stars_week_n": 2494,
+   "stars": "11k",
+   "url": "https://github.com/GoogleChrome/modern-web-guidance-src",
+   "early": false
+  },
+  {
+   "name": "backnotprop/plannotator",
+   "what": "Workspace to plan, annotate and review AI agents' work, then send feedback to them in one click.",
+   "language": "TypeScript",
+   "license": "Apache-2.0",
+   "stars_week": "+1,956 stars",
+   "stars_week_n": 1956,
+   "stars": "15.1k",
+   "url": "https://github.com/backnotprop/plannotator",
+   "early": false
+  },
+  {
+   "name": "ag-ui-protocol/ag-ui",
+   "what": "Open protocol for connecting AI agents to the apps and screens people use.",
+   "language": "TypeScript",
+   "license": "MIT",
+   "stars_week": "+1,753 stars",
+   "stars_week_n": 1753,
+   "stars": "21.7k",
+   "url": "https://github.com/ag-ui-protocol/ag-ui",
+   "early": false
+  },
+  {
+   "name": "we-promise/sure",
+   "what": "Free, open-source personal finance app for tracking accounts, budgets and net worth.",
+   "language": "Ruby",
+   "license": "AGPL-3.0",
+   "stars_week": "+1,567 stars",
+   "stars_week_n": 1567,
+   "stars": "17.9k",
+   "url": "https://github.com/we-promise/sure",
+   "early": false
+  }
+ ]
 }
