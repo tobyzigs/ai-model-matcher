@@ -238,6 +238,12 @@ td.model .pv{display:none;font-size:11.5px;color:var(--muted)}
     <div class="helpgrid" id="notegrid"></div>
   </section>
 
+  <section class="panel helpers" aria-label="Trending on GitHub" id="trendpanel" hidden>
+    <span class="label" id="trendtitle">Trending on GitHub this week</span>
+    <p class="goalnote">The 10 projects that gained the most GitHub stars this week, on any topic. Some are early experiments, so look before you install.</p>
+    <div class="helpgrid" id="trendgrid"></div>
+  </section>
+
   <div class="notes">
     <p><b>Sources.</b> Prices and context: <a href="https://openrouter.ai/models" target="_blank" rel="noopener">OpenRouter model list</a>. Scores, and prices for models sold only by their maker: <a href="https://artificialanalysis.ai/leaderboards/models" target="_blank" rel="noopener">Artificial Analysis leaderboard</a>. A weekly update refreshes both. Since November 2026, the Artificial Analysis feed sends only the Smarts score, so the other test scores show each model's most recent published result.</p>
   </div>
@@ -383,17 +389,20 @@ function head(){
     return '<th class="'+(c.num?'num':'')+(c.sticky?' sticky':'')+(c.cls?' '+c.cls:'')+'"'+aria+'><button type="button" data-k="'+c.k+'" title="'+esc((c.d?c.d+' ':'')+'Click to sort.')+'">'+c.t+(c.src?'<small class="src">'+c.src+'</small>':'')+(c.s?'<small>'+c.s+'</small>':'')+'</button></th>'}).join('');
 }
 
-let HELP=null,NOTE=null;
+let HELP=null,NOTE=null,TREND=null;
 function addImages(id){if(!id||!id.models)return;const byName={};for(const r of rows)if(!r.sub)byName[r.model]=r;
   for(const m of id.models){if(m.elo<850&&!/202[5-9]/.test(m.released))continue;const ex=byName[m.name];
     if(ex){ex.elo=m.elo;ex.pImg=m.p1k!=null?m.p1k/1000:null;continue}
     rows.push({prov:m.maker,model:m.name,id:'Released '+m.released,isImg:true,elo:m.elo,pImg:m.p1k!=null?m.p1k/1000:null,open:m.open,where:'Image API',blend:null,media:true})}}
 function renderNotable(){if(!NOTE)return;$('notetitle').textContent='New and notable money savers · '+(NOTE.week||'');
   $('notegrid').innerHTML=(NOTE.picks||[]).map(t=>'<div class="help"><a class="hn" href="'+esc(t.url)+'" target="_blank" rel="noopener">'+esc(t.name)+'</a><span class="hu">Used for: '+esc(t.use)+'</span><span class="hi">Replaces '+esc(t.replaces)+(t.paid?' ('+esc(t.paid)+')':'')+'</span><span class="hd">'+esc(t.what)+'</span><span class="hc">Free · '+esc(t.license)+' · '+esc(t.stars)+'</span><span class="hf">Found on: '+(t.found_url?'<a href="'+esc(t.found_url)+'" target="_blank" rel="noopener">'+esc(t.found_on||'source')+'</a>':esc(t.found_on||''))+'</span><span class="tagrow"><span class="hs">'+esc(t.setup)+'</span>'+(t.early?'<span class="hs early">Early stage</span>':'')+'</span></div>').join('')}
+function renderTrending(){const picks=(TREND&&TREND.repos)||[];$('trendpanel').hidden=!picks.length;if(!picks.length)return;
+  $('trendtitle').textContent='Trending on GitHub this week · '+(TREND.week||'');
+  $('trendgrid').innerHTML=picks.map((t,i)=>'<div class="help"><a class="hn" href="'+esc(t.url)+'" target="_blank" rel="noopener">'+(i+1)+'. '+esc(t.name)+'</a><span class="hd">'+esc(t.what)+'</span><span class="hc">'+esc(t.stars_week)+' this week · '+esc(t.stars)+' total</span><span class="hi">'+esc(t.language||'')+(t.license?' · '+esc(t.license):'')+'</span><span class="tagrow">'+(t.early?'<span class="hs early">Early stage</span>':'')+'</span></div>').join('')}
 function renderHelpers(){if(!HELP)return;const P=proj();const names=(P&&HELP.projects[P.id])||HELP.projects.all||[];
   $('helptitle').textContent='Helpful tools for '+(P?P.t.toLowerCase():'any project');
   $('helpgrid').innerHTML=names.map(n=>{const t=HELP.tools[n];if(!t)return '';return '<div class="help"><a class="hn" href="'+esc(t.url)+'" target="_blank" rel="noopener">'+esc(n)+'</a>'+(t.use?'<span class="hu">Used for: '+esc(t.use)+'</span>':'')+'<span class="hd">'+esc(t.does)+'</span><span class="hc">'+esc(t.cost)+'</span>'+(t.instead?'<span class="hi">'+esc(t.instead)+'</span>':'')+'<span class="hs">'+esc(t.setup)+'</span></div>'}).join('')}
-function render(){renderHelpers();renderNotable();
+function render(){renderHelpers();renderNotable();renderTrending();
   const list=filtered();
   $('count').innerHTML='Showing <b>'+list.length+'</b> of '+rows.length+' models and tools'+(state.sort[0]==='smartval'?' · sorted by smarts per dollar':'');
   // picks
@@ -449,8 +458,8 @@ $('subs').addEventListener('change',()=>{state.subs=$('subs').checked;syncInputs
 $('reset').addEventListener('click',()=>{state=fresh();goal='all';syncInputs();render()});
 
 load();
-Promise.all([fetch('models.json',{cache:'no-store'}).then(r=>{if(!r.ok)throw new Error(r.status);return r.json()}),fetch('subs.json',{cache:'no-store'}).then(r=>r.ok?r.json():null).catch(()=>null),fetch('tools.json',{cache:'no-store'}).then(r=>r.ok?r.json():null).catch(()=>null),fetch('notable.json',{cache:'no-store'}).then(r=>r.ok?r.json():null).catch(()=>null),fetch('images.json',{cache:'no-store'}).then(r=>r.ok?r.json():null).catch(()=>null)]).then(([d,sd,td,nd,id])=>{
-  HELP=td;NOTE=nd;
+Promise.all([fetch('models.json',{cache:'no-store'}).then(r=>{if(!r.ok)throw new Error(r.status);return r.json()}),fetch('subs.json',{cache:'no-store'}).then(r=>r.ok?r.json():null).catch(()=>null),fetch('tools.json',{cache:'no-store'}).then(r=>r.ok?r.json():null).catch(()=>null),fetch('notable.json',{cache:'no-store'}).then(r=>r.ok?r.json():null).catch(()=>null),fetch('images.json',{cache:'no-store'}).then(r=>r.ok?r.json():null).catch(()=>null),fetch('trending.json',{cache:'no-store'}).then(r=>r.ok?r.json():null).catch(()=>null)]).then(([d,sd,td,nd,id,gd])=>{
+  HELP=td;NOTE=nd;TREND=gd;
   prep(d,sd);addImages(id);if(goal&&GOALS.find(g=>g.id===goal)){const keep=state.textonly;state=fresh();state.textonly=keep;GOALS.find(g=>g.id===goal).apply(state)}
   syncInputs();render();
 }).catch(err=>{$('body').innerHTML='<tr><td class="empty" colspan="12">The model list did not load ('+esc(err.message)+'). Reload the page to try again.</td></tr>';$('stamp').textContent='Data not loaded'});
