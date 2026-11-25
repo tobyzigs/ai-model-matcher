@@ -59,7 +59,7 @@
 },
 "Canva Pro": {
 "does": "Easy design editor for social posts, flyers, and brand kits.",
-"cost": "$144/year (about $12/mo)",
+"cost": "$119.99/year or $12.99/mo, for up to 5 people",
 "setup": "Easy",
 "instead": null,
 "url": "https://www.canva.com/pricing/",
@@ -93,7 +93,7 @@
 "does": "Keyword, ranking, and competitor SEO data, paid only for what you use.",
 "cost": "Pay as you go; $50 minimum top-up",
 "setup": "Technical",
-"instead": "Instead of Semrush ($139/mo) or Ahrefs ($129/mo)",
+"instead": "Instead of Semrush ($139.95/mo) or Ahrefs ($129/mo)",
 "url": "https://dataforseo.com/pricing",
 "use": "Keyword and ranking data"
 },
@@ -275,7 +275,7 @@
 },
 "OpenAI transcription API": {
 "does": "Turns audio and video into text for captions and scripts.",
-"cost": "About $0.003 to $0.006 per minute",
+"cost": "About $0.0045 per minute",
 "setup": "Technical",
 "instead": "Instead of paid caption apps",
 "url": "https://developers.openai.com/api/docs/pricing",
@@ -285,7 +285,7 @@
 "does": "Beginner SEO tool for keyword and site checks.",
 "cost": "$29/mo",
 "setup": "Easy",
-"instead": "Instead of Semrush ($139/mo)",
+"instead": "Instead of Semrush ($139.95/mo)",
 "url": "https://ahrefs.com/pricing",
 "use": "Basic SEO checks"
 },

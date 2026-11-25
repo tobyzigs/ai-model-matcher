@@ -45,6 +45,20 @@
 "found_url": "https://github.com/trending?since=weekly"
 },
 {
+"name": "agentes.chat",
+"use": "Team chat with AI helpers",
+"replaces": "Slack Pro",
+"paid": "$8.75 per user/mo (paid monthly)",
+"what": "Free self-hosted team chat with channels and DMs, where AI agents join in and ask before sensitive steps.",
+"license": "AGPL-3.0",
+"stars": "2k GitHub stars",
+"early": true,
+"setup": "Technical",
+"url": "https://github.com/agentes-chat/agentes-chat",
+"found_on": "saasisdead.si, new this month",
+"found_url": "https://saasisdead.si/new"
+},
+{
 "name": "Yogurt",
 "use": "AI meeting notes",
 "replaces": "Granola (Business)",
@@ -87,20 +101,6 @@
 "found_url": "https://github.com/trending/typescript?since=weekly"
 },
 {
-"name": "Hermit CRM",
-"use": "Contacts, deals, and sales follow-ups",
-"replaces": "Pipedrive (Lite)",
-"paid": "$14 per seat/mo (yearly plan)",
-"what": "Free CRM for one person. Keeps contacts, deals, and tasks as files on your Mac or Linux computer.",
-"license": "Apache-2.0",
-"stars": "45 GitHub stars",
-"early": true,
-"setup": "Technical",
-"url": "https://github.com/Hermit-CRM/hermit-crm",
-"found_on": "Hacker News, Show HN",
-"found_url": "https://news.ycombinator.com/item?id=50609708"
-},
-{
 "name": "ffmpeg-skill",
 "use": "Video edits with an AI assistant",
 "replaces": "Descript",
@@ -113,6 +113,34 @@
 "url": "https://github.com/kajisho5/ffmpeg-skill",
 "found_on": "GitHub trending (this week)",
 "found_url": "https://github.com/trending?since=weekly"
+},
+{
+"name": "form.md",
+"use": "Docs, wikis, and databases",
+"replaces": "Notion Plus",
+"paid": "$10 per seat/mo",
+"what": "Free workspace for pages and databases with tables, boards, calendars, and 90 templates. Runs on your own computer.",
+"license": "Apache-2.0",
+"stars": "22 GitHub stars",
+"early": true,
+"setup": "Easy",
+"url": "https://github.com/nodemode-dev/form.md",
+"found_on": "Self-Host Weekly, new software",
+"found_url": "https://selfh.st/weekly/2026-11-20/"
+},
+{
+"name": "Postfalcon",
+"use": "Social media post scheduling",
+"replaces": "Buffer",
+"paid": "$5 per channel/mo",
+"what": "Free self-hosted scheduler that posts to Instagram, Facebook, TikTok, LinkedIn, YouTube, and more from one calendar.",
+"license": "AGPL-3.0",
+"stars": "19 GitHub stars",
+"early": true,
+"setup": "Technical",
+"url": "https://github.com/postfalcon/postfalcon",
+"found_on": "Self-Host Weekly, new software",
+"found_url": "https://selfh.st/weekly/2026-11-20/"
 }
 ]
 }

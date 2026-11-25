@@ -22,7 +22,7 @@
 "free": true,
 "api": false,
 "url": "https://www.adobe.com/products/firefly/plans.html",
-"note": "Commercially safe images. Plans include partner models such as Kling, Veo, and Nano Banana. API is enterprise only.",
+"note": "Commercially safe images. Plans include partner models such as Kling, Runway, and Nano Banana. API is enterprise only.",
 "best": "design"
 },
 {
@@ -30,7 +30,7 @@
 "maker": "Ideogram AI",
 "kind": "Image",
 "latest": "Ideogram 4.5",
-"price": 20,
+"price": 15,
 "free": true,
 "api": true,
 "url": "https://ideogram.ai/pricing",
@@ -66,11 +66,11 @@
 "maker": "Canva",
 "kind": "Image + video",
 "latest": null,
-"price": 18,
+"price": 12.99,
 "free": true,
 "api": false,
 "url": "https://www.canva.com/pricing/",
-"note": "AI inside a design editor. Pro caps AI use; price from a third-party check ($144 a year on Canva's page).",
+"note": "AI inside a design editor. Pro caps AI use; $119.99 a year, for up to 5 people.",
 "best": "design"
 },
 {
@@ -139,7 +139,7 @@
 "free": true,
 "api": true,
 "url": "https://www.descript.com/pricing",
-"note": "Edit video by editing the transcript. Includes an AI editing assistant."
+"note": "Edit video by editing the transcript. Underlord AI assistant helps edit. API and MCP available."
 },
 {
 "tool": "CapCut",
