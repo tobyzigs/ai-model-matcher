@@ -1,5 +1,5 @@
 {
-"updated": "2026-11-05",
+"updated": "2026-11-25",
 "tools": [
 {
 "tool": "Midjourney",
@@ -88,7 +88,7 @@
 "tool": "Pika",
 "maker": "Pika Labs",
 "kind": "Video",
-"latest": "Pika 2.5",
+"latest": "Pika H3 Flex",
 "price": 10,
 "free": true,
 "api": true,
@@ -137,7 +137,7 @@
 "latest": null,
 "price": 24,
 "free": true,
-"api": false,
+"api": true,
 "url": "https://www.descript.com/pricing",
 "note": "Edit video by editing the transcript. Includes an AI editing assistant."
 },
@@ -173,7 +173,7 @@
 "free": false,
 "api": true,
 "url": "https://www.magnific.com/pricing",
-"note": "Many image and video models plus stock images. Higher plan has unlimited generations.",
+"note": "Many image and video models plus stock images. All plans use credits and include API access.",
 "best": "both"
 }
 ]

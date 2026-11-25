@@ -1,5 +1,5 @@
 {
-"updated": "2026-11-05",
+"updated": "2026-11-25",
 "tools": {
 "OpenRouter": {
 "does": "One account and one bill for hundreds of AI models, including most models in this list.",
@@ -259,7 +259,7 @@
 },
 "DaVinci Resolve": {
 "does": "Professional video editor with a strong free version.",
-"cost": "Free; Studio $236 one-time (sale price; was $295)",
+"cost": "Free; Studio $295 one-time",
 "setup": "Some setup",
 "instead": "Instead of Premiere Pro",
 "url": "https://www.blackmagicdesign.com/products/davinciresolve",

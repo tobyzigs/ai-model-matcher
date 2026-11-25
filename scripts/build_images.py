@@ -9,7 +9,7 @@ for line in md.splitlines():
     cell=m.group(2)
     maker=re.search(r'!\[(.*?) logo\]',cell); maker=maker.group(1) if maker else ''
     name=cell.split('<br>',1)[-1]
-    name=re.sub(r'\s*\[!\[.*$','',name).replace('\\[','[').replace('\\]',']').strip()
+    name=re.sub(r'!\[\]\([^)]*\)','',re.sub(r'\s*\[!\[.*$','',name)).replace('\\[','[').replace('\\]',']').strip()
     pr=re.search(r'\$([\d.]+)\s*/1k',m.group(6))
     rows.append({"rank":int(m.group(1)),"name":name,"maker":maker.replace('SpaceXAI','xAI'),"elo":int(m.group(3)),
         "votes":int(m.group(4).replace(',','')),"released":m.group(5).strip(),
